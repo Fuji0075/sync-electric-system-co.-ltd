@@ -150,6 +150,41 @@ async function main() {
     }
   }
 
+  // Catalog files
+  const catalogFiles = [
+    {
+      title: "Helical Gear Motor Catalogue",
+      fileUrl: "/catalogs/helical-gear-motor-catalogue.pdf",
+      order: 1,
+    },
+    {
+      title: "Worm Gear Reducer Catalogue",
+      fileUrl: "/catalogs/worm-gear-reducer-catalogue.pdf",
+      order: 2,
+    },
+    {
+      title: "Cyclo Drive Catalogue",
+      fileUrl: "/catalogs/cyclo-drive-catalogue.pdf",
+      order: 3,
+    },
+    {
+      title: "Aluminium Worm Gear Catalogue",
+      fileUrl: "/catalogs/aluminium-worm-gear-catalogue.pdf",
+      order: 4,
+    },
+    {
+      title: "FAG Induction Motor Catalogue",
+      fileUrl: "/catalogs/fag-induction-motor-catalogue.pdf",
+      order: 5,
+    },
+  ];
+  for (const c of catalogFiles) {
+    const existing = await prisma.catalogFile.findFirst({ where: { title: c.title } });
+    if (!existing) {
+      await prisma.catalogFile.create({ data: c });
+    }
+  }
+
   // Articles
   const articles = [
     {
