@@ -16,6 +16,19 @@ export async function createCatalogFile(formData: FormData) {
   revalidatePath("/catalog");
 }
 
+export async function updateCatalogFile(id: string, formData: FormData) {
+  const title = String(formData.get("title") ?? "").trim();
+  const fileUrl = String(formData.get("fileUrl") ?? "").trim();
+  const coverImage = String(formData.get("coverImage") ?? "").trim() || null;
+  const order = Number(formData.get("order") ?? 0);
+  if (!title || !fileUrl) return;
+
+  await prisma.catalogFile.update({ where: { id }, data: { title, fileUrl, coverImage, order } });
+
+  revalidatePath("/admin/catalog");
+  revalidatePath("/catalog");
+}
+
 export async function deleteCatalogFile(id: string) {
   await prisma.catalogFile.delete({ where: { id } });
   revalidatePath("/admin/catalog");
