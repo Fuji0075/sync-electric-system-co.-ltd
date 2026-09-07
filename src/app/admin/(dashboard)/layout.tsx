@@ -14,6 +14,7 @@ const NAV = [
   { href: "/admin/chat", label: "แชทกับลูกค้า", icon: "💬" },
   { href: "/admin/quotes", label: "คำขอใบเสนอราคา", icon: "📥" },
   { href: "/admin/quotations", label: "ใบเสนอราคา", icon: "🧾" },
+  { href: "/admin/profile", label: "โปรไฟล์ของฉัน", icon: "✍️" },
   { href: "/admin/settings", label: "ตั้งค่าเว็บไซต์", icon: "🔧" },
 ];
 

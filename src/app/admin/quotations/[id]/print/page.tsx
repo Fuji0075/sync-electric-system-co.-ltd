@@ -26,7 +26,7 @@ export default async function QuoteDocumentPreviewPage({ params }: { params: Par
   const [quote, settings] = await Promise.all([
     prisma.quoteDocument.findUnique({
       where: { id },
-      include: { items: { orderBy: { order: "asc" } } },
+      include: { items: { orderBy: { order: "asc" } }, assignedAdmin: true },
     }),
     getSiteSettings(),
   ]);
@@ -201,7 +201,17 @@ export default async function QuoteDocumentPreviewPage({ params }: { params: Par
         <div className="mt-16 flex justify-between text-xs">
           <div className="text-center">
             <p>Sincerely Yours,</p>
-            <div className="mt-10 border-t border-neutral-400 pt-1">
+            {quote.assignedAdmin?.signatureUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- small inline base64 signature image
+              <img
+                src={quote.assignedAdmin.signatureUrl}
+                alt={`ลายเซ็น ${quote.assignedAdmin.name}`}
+                className="mx-auto mt-2 h-14"
+              />
+            ) : (
+              <div className="mt-10" />
+            )}
+            <div className="border-t border-neutral-400 pt-1">
               {quote.salesName && <p className="font-semibold">{quote.salesName}</p>}
               {quote.salesPhone && <p>{quote.salesPhone}</p>}
             </div>

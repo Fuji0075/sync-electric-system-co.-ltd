@@ -11,11 +11,14 @@ datasource db {
 }
 
 model AdminUser {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  name         String
-  createdAt    DateTime @default(now())
+  id             String          @id @default(cuid())
+  email          String          @unique
+  passwordHash   String
+  name           String
+  phone          String?
+  signatureUrl   String?
+  createdAt      DateTime        @default(now())
+  quoteDocuments QuoteDocument[]
 }
 
 model Category {
@@ -155,6 +158,8 @@ model QuoteDocument {
   status         String      @default("draft") // draft | approved | sent
   conversationId String?
   quoteRequestId String?
+  assignedAdminId String?
+  assignedAdmin  AdminUser?  @relation(fields: [assignedAdminId], references: [id])
   issueDate      DateTime    @default(now())
   companyName    String?
   attn           String?

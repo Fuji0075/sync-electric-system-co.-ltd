@@ -7,6 +7,13 @@ import { generateQuoteNumber } from "@/lib/quote-number";
 import { findMatchedProductsForQuote } from "@/lib/chat-ai";
 import { sendMail } from "@/lib/mail";
 import { getSiteSettings } from "@/lib/settings";
+import { getSession } from "@/lib/auth";
+
+async function getCurrentAdmin() {
+  const session = await getSession();
+  if (!session) return null;
+  return prisma.adminUser.findUnique({ where: { id: session.sub } });
+}
 
 export async function createQuoteFromConversation(conversationId: string) {
   const conversation = await prisma.conversation.findUnique({
@@ -21,11 +28,17 @@ export async function createQuoteFromConversation(conversationId: string) {
 
   const matchedProducts = await findMatchedProductsForQuote(visitorMessages);
   const quoteNumber = await generateQuoteNumber();
+  // Remembers which admin picked up this chat, so their name/phone/signature
+  // are attached to the quote automatically.
+  const admin = await getCurrentAdmin();
 
   const quote = await prisma.quoteDocument.create({
     data: {
       quoteNumber,
       conversationId: conversation.id,
+      assignedAdminId: admin?.id ?? null,
+      salesName: admin?.name ?? null,
+      salesPhone: admin?.phone ?? null,
       companyName: conversation.customer?.name ?? conversation.visitorName ?? null,
       email: conversation.customer?.email ?? conversation.visitorEmail ?? null,
       tel: conversation.customer?.phone ?? conversation.visitorPhone ?? null,
@@ -56,11 +69,15 @@ export async function createQuoteFromQuoteRequest(quoteRequestId: string) {
   }
 
   const quoteNumber = await generateQuoteNumber();
+  const admin = await getCurrentAdmin();
 
   const quote = await prisma.quoteDocument.create({
     data: {
       quoteNumber,
       quoteRequestId: request.id,
+      assignedAdminId: admin?.id ?? null,
+      salesName: admin?.name ?? null,
+      salesPhone: admin?.phone ?? null,
       companyName: request.company ?? request.name,
       attn: request.name,
       tel: request.phone,
@@ -210,4 +227,22 @@ export async function approveQuote(id: string) {
   await prisma.quoteDocument.update({ where: { id }, data: { status: "approved" } });
   revalidatePath(`/admin/quotations/${id}/edit`);
   revalidatePath("/admin/quotations");
+}
+
+/**
+ * Lets the currently logged-in admin take ownership of a quote they didn't
+ * originally create — their name/phone/signature (from their profile) then
+ * appear on the printed document instead of whoever created it.
+ */
+export async function claimQuote(id: string) {
+  const admin = await getCurrentAdmin();
+  if (!admin) return;
+
+  await prisma.quoteDocument.update({
+    where: { id },
+    data: { assignedAdminId: admin.id, salesName: admin.name, salesPhone: admin.phone },
+  });
+
+  revalidatePath(`/admin/quotations/${id}/edit`);
+  revalidatePath(`/admin/quotations/${id}/print`);
 }

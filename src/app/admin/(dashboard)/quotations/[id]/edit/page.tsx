@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { updateQuoteDocument, sendQuoteToCustomer } from "../../actions";
+import { getSession } from "@/lib/auth";
+import { updateQuoteDocument, sendQuoteToCustomer, claimQuote } from "../../actions";
 import ItemsEditor from "./ItemsEditor";
 import QuotePreviewModal from "./QuotePreviewModal";
 
@@ -13,10 +14,13 @@ function toDateInputValue(d: Date) {
 
 export default async function EditQuoteDocumentPage({ params }: { params: Params }) {
   const { id } = await params;
-  const quote = await prisma.quoteDocument.findUnique({
-    where: { id },
-    include: { items: { orderBy: { order: "asc" } } },
-  });
+  const [quote, session] = await Promise.all([
+    prisma.quoteDocument.findUnique({
+      where: { id },
+      include: { items: { orderBy: { order: "asc" } }, assignedAdmin: true },
+    }),
+    getSession(),
+  ]);
   if (!quote) notFound();
 
   const action = updateQuoteDocument.bind(null, id);
@@ -24,6 +28,11 @@ export default async function EditQuoteDocumentPage({ params }: { params: Params
     "use server";
     await sendQuoteToCustomer(id);
   }
+  async function claimAction() {
+    "use server";
+    await claimQuote(id);
+  }
+  const isMine = quote.assignedAdminId === session?.sub;
 
   return (
     <div>
@@ -137,6 +146,39 @@ export default async function EditQuoteDocumentPage({ params }: { params: Params
         <div>
           <h2 className="mb-2 text-sm font-semibold text-neutral-900">รายการสินค้า</h2>
           <ItemsEditor initialItems={quote.items} initialVatPercent={quote.vatPercent} />
+        </div>
+
+        <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+          <div className="flex items-center gap-3">
+            {quote.assignedAdmin?.signatureUrl && (
+              // eslint-disable-next-line @next/next/no-img-element -- small inline base64 signature preview
+              <img
+                src={quote.assignedAdmin.signatureUrl}
+                alt=""
+                className="h-8 rounded border border-neutral-200 bg-white p-0.5"
+              />
+            )}
+            <p className="text-sm text-neutral-600">
+              {quote.assignedAdmin ? (
+                <>
+                  ผู้รับผิดชอบ: <span className="font-semibold text-neutral-800">{quote.assignedAdmin.name}</span>
+                  {isMine && <span className="ml-1 text-xs text-brand-dark">(คุณ)</span>}
+                </>
+              ) : (
+                "ยังไม่มีผู้รับผิดชอบใบเสนอราคานี้"
+              )}
+            </p>
+          </div>
+          {!isMine && (
+            <form action={claimAction}>
+              <button
+                type="submit"
+                className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:border-brand hover:text-brand-dark"
+              >
+                รับผิดชอบใบนี้ (ใช้ชื่อ/ลายเซ็นของฉัน)
+              </button>
+            </form>
+          )}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
