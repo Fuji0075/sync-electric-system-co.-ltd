@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { sendAdminReply, closeConversation } from "../actions";
+import AutoRefresh from "@/components/AutoRefresh";
 
 const SENDER_LABEL: Record<string, string> = {
   visitor: "ลูกค้า",
@@ -25,6 +26,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
 
   return (
     <div>
+      <AutoRefresh />
       <Link href="/admin/chat" className="mb-4 inline-block text-sm text-brand-dark hover:underline">
         ← กลับไปรายการแชท
       </Link>

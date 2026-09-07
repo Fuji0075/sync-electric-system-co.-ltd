@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import AutoRefresh from "@/components/AutoRefresh";
 
 export default async function AdminChatListPage() {
   const conversations = await prisma.conversation.findMany({
@@ -12,6 +13,7 @@ export default async function AdminChatListPage() {
 
   return (
     <div>
+      <AutoRefresh />
       <h1 className="mb-6 text-xl font-bold text-neutral-900">แชทกับลูกค้า</h1>
 
       <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">

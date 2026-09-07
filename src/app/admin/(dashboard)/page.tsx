@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import AutoRefresh from "@/components/AutoRefresh";
 
 export default async function AdminDashboardPage() {
   const [
@@ -53,6 +54,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
+      <AutoRefresh intervalMs={10000} />
       <h1 className="mb-6 text-xl font-bold text-neutral-900">แดชบอร์ด</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
