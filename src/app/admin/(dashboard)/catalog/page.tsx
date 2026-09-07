@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { createCatalogFile, deleteCatalogFile } from "./actions";
+import { createCatalogFile, deleteCatalogFile, updateCatalogFile } from "./actions";
 import { requireModuleAccess } from "@/lib/admin-permissions";
+import EditCatalogModal from "./EditCatalogModal";
 
 export default async function AdminCatalogPage() {
   await requireModuleAccess("catalog");
@@ -83,9 +83,7 @@ export default async function AdminCatalogPage() {
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
-                  <Link href={`/admin/catalog/${f.id}/edit`} className="text-sm text-brand-dark hover:underline">
-                    แก้ไข
-                  </Link>
+                  <EditCatalogModal file={f} action={updateCatalogFile.bind(null, f.id)} />
                   <form
                     action={async () => {
                       "use server";
