@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { sendAdminReply, closeConversation } from "../actions";
 import { createQuoteFromConversation } from "../../quotations/actions";
-import AutoRefresh from "@/components/AutoRefresh";
 import { parseChatMessage } from "@/lib/chat-message";
-import { requireModuleAccess } from "@/lib/admin-permissions";
+import ChatAvatar from "../ChatAvatar";
 
 const SENDER_LABEL: Record<string, string> = {
   visitor: "ลูกค้า",
@@ -13,10 +11,13 @@ const SENDER_LABEL: Record<string, string> = {
   ai: "ผู้ช่วยอัตโนมัติ",
 };
 
+function formatTime(d: Date) {
+  return new Intl.DateTimeFormat("th-TH", { hour: "2-digit", minute: "2-digit" }).format(d);
+}
+
 type Params = Promise<{ id: string }>;
 
 export default async function AdminChatThreadPage({ params }: { params: Params }) {
-  await requireModuleAccess("chat");
   const { id } = await params;
   const conversation = await prisma.conversation.findUnique({
     where: { id },
@@ -29,21 +30,19 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
     conversation.customer?.name || conversation.visitorName || `ผู้เยี่ยมชม #${conversation.id.slice(-5)}`;
 
   return (
-    <div>
-      <AutoRefresh />
-      <Link href="/admin/chat" className="mb-4 inline-block text-sm text-brand-dark hover:underline">
-        ← กลับไปรายการแชท
-      </Link>
-
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-neutral-900">{displayName}</h1>
-          <p className="text-sm text-neutral-500">
-            {conversation.visitorEmail ?? "ไม่ทราบอีเมล"}
-            {conversation.visitorPhone ? ` · ${conversation.visitorPhone}` : ""}
-          </p>
+    <>
+      <div className="flex items-center justify-between gap-3 border-b border-neutral-100 px-5 py-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <ChatAvatar name={displayName} online={conversation.status !== "closed"} size="lg" />
+          <div className="min-w-0">
+            <h2 className="truncate text-sm font-bold text-neutral-900">{displayName}</h2>
+            <p className="truncate text-xs text-neutral-400">
+              {conversation.visitorEmail ?? "ไม่ทราบอีเมล"}
+              {conversation.visitorPhone ? ` · ${conversation.visitorPhone}` : ""}
+            </p>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           <form
             action={async () => {
               "use server";
@@ -54,7 +53,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
               type="submit"
               className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
             >
-              🧾 สร้างใบเสนอราคาจากแชทนี้
+              🧾 สร้างใบเสนอราคา
             </button>
           </form>
           {conversation.status !== "closed" && (
@@ -75,49 +74,54 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
         </div>
       </div>
 
-      <div className="flex h-[28rem] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-        <div className="flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-4">
-          {conversation.messages.map((m) => {
-            const isVisitor = m.sender === "visitor";
-            const { text } = parseChatMessage(m.body);
-            return (
-              <div key={m.id} className={`flex ${isVisitor ? "justify-start" : "justify-end"}`}>
+      <div className="flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-5">
+        {conversation.messages.map((m) => {
+          const isVisitor = m.sender === "visitor";
+          const isAdmin = m.sender === "admin";
+          const { text } = parseChatMessage(m.body);
+          return (
+            <div key={m.id} className={`flex items-end gap-2 ${isVisitor ? "" : "flex-row-reverse"}`}>
+              <ChatAvatar name={isVisitor ? displayName : SENDER_LABEL[m.sender] ?? m.sender} size="sm" />
+              <div className={`flex max-w-[70%] flex-col ${isVisitor ? "items-start" : "items-end"}`}>
                 <div
-                  className={`max-w-[75%] rounded-2xl px-3 py-2 text-sm whitespace-pre-line ${
+                  className={`rounded-2xl px-4 py-2.5 text-sm whitespace-pre-line shadow-sm ${
                     isVisitor
-                      ? "bg-white border border-neutral-200 text-neutral-700"
-                      : m.sender === "ai"
-                        ? "bg-neutral-200 text-neutral-700"
-                        : "bg-brand text-white"
+                      ? "rounded-bl-md bg-white text-neutral-700"
+                      : isAdmin
+                        ? "rounded-br-md bg-brand text-white"
+                        : "rounded-br-md bg-neutral-200 text-neutral-700"
                   }`}
                 >
-                  <p className="mb-0.5 text-[10px] font-semibold opacity-70">
-                    {SENDER_LABEL[m.sender] ?? m.sender}
-                  </p>
                   {text}
                 </div>
+                <span className="mt-1 px-1 text-[10px] text-neutral-400">
+                  {SENDER_LABEL[m.sender] ?? m.sender} · {formatTime(m.createdAt)}
+                </span>
               </div>
-            );
-          })}
-          {conversation.messages.length === 0 && (
-            <p className="text-center text-sm text-neutral-400">ยังไม่มีข้อความ</p>
-          )}
-        </div>
-
-        <form action={reply} className="flex items-center gap-2 border-t border-neutral-200 p-3">
-          <input
-            name="body"
-            placeholder="พิมพ์ตอบกลับลูกค้า..."
-            className="flex-1 rounded-full border border-neutral-300 px-4 py-2 text-sm outline-none focus:border-brand"
-          />
-          <button
-            type="submit"
-            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
-            ส่ง
-          </button>
-        </form>
+            </div>
+          );
+        })}
+        {conversation.messages.length === 0 && (
+          <p className="pt-10 text-center text-sm text-neutral-400">ยังไม่มีข้อความ</p>
+        )}
       </div>
-    </div>
+
+      <form action={reply} className="flex items-center gap-2 border-t border-neutral-100 p-4">
+        <input
+          name="body"
+          placeholder="Enter Message..."
+          className="flex-1 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm outline-none focus:border-brand focus:bg-white"
+        />
+        <button
+          type="submit"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-white hover:bg-brand-dark"
+          aria-label="ส่ง"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+            <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </form>
+    </>
   );
 }
