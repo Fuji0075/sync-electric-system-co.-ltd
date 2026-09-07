@@ -155,32 +155,39 @@ async function main() {
     {
       title: "Helical Gear Motor Catalogue",
       fileUrl: "/catalogs/helical-gear-motor-catalogue.pdf",
+      coverImage: "/catalogs/covers/helical-gear-motor-catalogue.jpg",
       order: 1,
     },
     {
       title: "Worm Gear Reducer Catalogue",
       fileUrl: "/catalogs/worm-gear-reducer-catalogue.pdf",
+      coverImage: "/catalogs/covers/worm-gear-reducer-catalogue.jpg",
       order: 2,
     },
     {
       title: "Cyclo Drive Catalogue",
       fileUrl: "/catalogs/cyclo-drive-catalogue.pdf",
+      coverImage: "/catalogs/covers/cyclo-drive-catalogue.jpg",
       order: 3,
     },
     {
       title: "Aluminium Worm Gear Catalogue",
       fileUrl: "/catalogs/aluminium-worm-gear-catalogue.pdf",
+      coverImage: "/catalogs/covers/aluminium-worm-gear-catalogue.jpg",
       order: 4,
     },
     {
       title: "FAG Induction Motor Catalogue",
       fileUrl: "/catalogs/fag-induction-motor-catalogue.pdf",
+      coverImage: "/catalogs/covers/fag-induction-motor-catalogue.jpg",
       order: 5,
     },
   ];
   for (const c of catalogFiles) {
     const existing = await prisma.catalogFile.findFirst({ where: { title: c.title } });
-    if (!existing) {
+    if (existing) {
+      await prisma.catalogFile.update({ where: { id: existing.id }, data: c });
+    } else {
       await prisma.catalogFile.create({ data: c });
     }
   }
@@ -227,6 +234,7 @@ async function main() {
     { key: "email", value: "sales03@sync-electric.com" },
     { key: "line_id", value: "@sync" },
     { key: "facebook", value: "SYNC Electric System" },
+    { key: "sales_email", value: "sales03@sync-electric.com" },
   ];
   for (const s of settings) {
     await prisma.siteSetting.upsert({

@@ -6,10 +6,11 @@ import { revalidatePath } from "next/cache";
 export async function createCatalogFile(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const fileUrl = String(formData.get("fileUrl") ?? "").trim();
+  const coverImage = String(formData.get("coverImage") ?? "").trim() || null;
   const order = Number(formData.get("order") ?? 0);
   if (!title || !fileUrl) return;
 
-  await prisma.catalogFile.create({ data: { title, fileUrl, order } });
+  await prisma.catalogFile.create({ data: { title, fileUrl, coverImage, order } });
 
   revalidatePath("/admin/catalog");
   revalidatePath("/catalog");

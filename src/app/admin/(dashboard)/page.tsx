@@ -2,15 +2,27 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminDashboardPage() {
-  const [products, categories, articles, banners, messages, unreadMessages] =
-    await Promise.all([
-      prisma.product.count(),
-      prisma.category.count(),
-      prisma.article.count(),
-      prisma.banner.count(),
-      prisma.contactMessage.count(),
-      prisma.contactMessage.count({ where: { read: false } }),
-    ]);
+  const [
+    products,
+    categories,
+    articles,
+    banners,
+    messages,
+    unreadMessages,
+    conversationsNeedingAttention,
+    newQuotes,
+    totalQuotes,
+  ] = await Promise.all([
+    prisma.product.count(),
+    prisma.category.count(),
+    prisma.article.count(),
+    prisma.banner.count(),
+    prisma.contactMessage.count(),
+    prisma.contactMessage.count({ where: { read: false } }),
+    prisma.conversation.count({ where: { needsAttention: true } }),
+    prisma.quoteRequest.count({ where: { status: "new" } }),
+    prisma.quoteRequest.count(),
+  ]);
 
   const cards = [
     { label: "สินค้า", value: products, href: "/admin/products", icon: "⚙️" },
@@ -23,6 +35,20 @@ export default async function AdminDashboardPage() {
       href: "/admin/messages",
       icon: "✉️",
     },
+    {
+      label: "แชทที่ต้องการแอดมิน",
+      value: conversationsNeedingAttention,
+      href: "/admin/chat",
+      icon: "💬",
+      highlight: conversationsNeedingAttention > 0,
+    },
+    {
+      label: "ใบเสนอราคา (รอติดต่อกลับ)",
+      value: `${newQuotes}/${totalQuotes}`,
+      href: "/admin/quotes",
+      icon: "🧾",
+      highlight: newQuotes > 0,
+    },
   ];
 
   return (
@@ -33,11 +59,21 @@ export default async function AdminDashboardPage() {
           <Link
             key={c.label}
             href={c.href}
-            className="flex items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition hover:border-brand hover:shadow-md"
+            className={`flex items-center gap-4 rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md ${
+              c.highlight
+                ? "border-red-300 hover:border-red-400"
+                : "border-neutral-200 hover:border-brand"
+            }`}
           >
             <span className="text-3xl">{c.icon}</span>
             <div>
-              <div className="text-2xl font-extrabold text-neutral-900">{c.value}</div>
+              <div
+                className={`text-2xl font-extrabold ${
+                  c.highlight ? "text-red-600" : "text-neutral-900"
+                }`}
+              >
+                {c.value}
+              </div>
               <div className="text-xs text-neutral-500">{c.label}</div>
             </div>
           </Link>

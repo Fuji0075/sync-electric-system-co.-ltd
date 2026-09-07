@@ -32,6 +32,14 @@ export default async function AdminCatalogPage() {
             />
           </div>
           <div>
+            <label className="mb-1 block text-sm font-medium text-neutral-700">ลิงก์รูปหน้าปก (URL)</label>
+            <input
+              name="coverImage"
+              placeholder="/catalogs/covers/motor-catalog.jpg"
+              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+            />
+          </div>
+          <div>
             <label className="mb-1 block text-sm font-medium text-neutral-700">ลำดับ</label>
             <input
               name="order"
@@ -52,16 +60,24 @@ export default async function AdminCatalogPage() {
           <ul className="divide-y divide-neutral-100">
             {files.map((f) => (
               <li key={f.id} className="flex items-center justify-between gap-4 p-4">
-                <div>
-                  <div className="font-medium text-neutral-800">{f.title}</div>
-                  <a
-                    href={f.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-brand-dark hover:underline"
-                  >
-                    {f.fileUrl}
-                  </a>
+                <div className="flex items-center gap-3">
+                  <div className="h-14 w-10 shrink-0 overflow-hidden rounded bg-neutral-100">
+                    {f.coverImage && (
+                      // eslint-disable-next-line @next/next/no-img-element -- admin-only thumbnail preview
+                      <img src={f.coverImage} alt="" className="h-full w-full object-cover" />
+                    )}
+                  </div>
+                  <div>
+                    <div className="font-medium text-neutral-800">{f.title}</div>
+                    <a
+                      href={f.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-brand-dark hover:underline"
+                    >
+                      {f.fileUrl}
+                    </a>
+                  </div>
                 </div>
                 <form
                   action={async () => {

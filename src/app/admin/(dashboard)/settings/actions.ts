@@ -13,6 +13,7 @@ const KEYS = [
   "email",
   "line_id",
   "facebook",
+  "sales_email",
 ];
 
 export async function updateSettings(formData: FormData) {

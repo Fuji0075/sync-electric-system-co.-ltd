@@ -3,6 +3,7 @@ import Logo from "@/components/Logo";
 import SearchBar from "@/components/SearchBar";
 import MobileMenu from "@/components/MobileMenu";
 import { getSiteSettings } from "@/lib/settings";
+import { getCustomerSession } from "@/lib/customer-auth";
 
 const NAV = [
   { href: "/", label: "หน้าแรก" },
@@ -15,6 +16,7 @@ const NAV = [
 
 export default async function Header() {
   const settings = await getSiteSettings();
+  const customerSession = await getCustomerSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur">
@@ -29,6 +31,16 @@ export default async function Header() {
             </a>
             <span className="hidden text-white/40 sm:inline">|</span>
             <span className="hidden sm:inline">Line: {settings.line_id}</span>
+            <span className="hidden text-white/40 sm:inline">|</span>
+            {customerSession ? (
+              <Link href="/account" className="hover:underline">
+                บัญชีของฉัน
+              </Link>
+            ) : (
+              <Link href="/account/login" className="hover:underline">
+                เข้าสู่ระบบ / สมัครสมาชิก
+              </Link>
+            )}
           </div>
         </div>
       </div>

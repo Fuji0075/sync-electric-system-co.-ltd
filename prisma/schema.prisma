@@ -71,11 +71,12 @@ model Banner {
 }
 
 model CatalogFile {
-  id        String   @id @default(cuid())
-  title     String
-  fileUrl   String
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  title      String
+  fileUrl    String
+  coverImage String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
 }
 
 model ContactMessage {
@@ -92,4 +93,57 @@ model SiteSetting {
   id    String @id @default(cuid())
   key   String @unique
   value String
+}
+
+model Customer {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  name          String
+  phone         String?
+  createdAt     DateTime       @default(now())
+  conversations Conversation[]
+  quoteRequests QuoteRequest[]
+}
+
+model Conversation {
+  id             String    @id @default(cuid())
+  visitorId      String    @unique
+  customerId     String?
+  customer       Customer? @relation(fields: [customerId], references: [id])
+  visitorName    String?
+  visitorEmail   String?
+  visitorPhone   String?
+  needsAttention Boolean   @default(false)
+  unreadByVisitor Boolean  @default(false)
+  status         String    @default("open")
+  messages       Message[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  sender         String
+  body           String
+  createdAt      DateTime     @default(now())
+}
+
+model QuoteRequest {
+  id          String    @id @default(cuid())
+  productId   String?
+  productName String?
+  customerId  String?
+  customer    Customer? @relation(fields: [customerId], references: [id])
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  quantity    String?
+  message     String?
+  status      String    @default("new")
+  emailSent   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import { getSiteSettings } from "@/lib/settings";
+import QuoteRequestModal from "./QuoteRequestModal";
 import type { Metadata } from "next";
 
 type Params = Promise<{ slug: string }>;
@@ -71,12 +72,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/contact"
-              className="rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand-dark"
-            >
-              ขอใบเสนอราคา
-            </Link>
+            <QuoteRequestModal productId={product.id} productName={product.name} />
             <a
               href={`tel:${settings.mobile.replace(/[^0-9+]/g, "")}`}
               className="rounded-full border border-neutral-300 px-6 py-3 text-sm font-bold text-neutral-700 transition hover:border-brand hover:text-brand-dark"

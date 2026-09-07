@@ -14,6 +14,7 @@ const DEFAULTS: SiteSettings = {
   email: "sales03@sync-electric.com",
   line_id: "@sync",
   facebook: "SYNC Electric System",
+  sales_email: "sales03@sync-electric.com",
 };
 
 export async function getSiteSettings(): Promise<SiteSettings> {
