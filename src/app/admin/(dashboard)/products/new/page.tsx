@@ -1,0 +1,14 @@
+import { prisma } from "@/lib/prisma";
+import ProductForm from "../ProductForm";
+import { createProduct } from "../actions";
+
+export default async function NewProductPage() {
+  const categories = await prisma.category.findMany({ orderBy: { order: "asc" } });
+
+  return (
+    <div>
+      <h1 className="mb-6 text-xl font-bold text-neutral-900">เพิ่มสินค้า</h1>
+      <ProductForm action={createProduct} categories={categories} />
+    </div>
+  );
+}
