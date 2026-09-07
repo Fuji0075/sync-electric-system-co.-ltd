@@ -35,9 +35,16 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
         <div className="flex min-w-0 items-center gap-3">
           <ChatAvatar name={displayName} online={conversation.status !== "closed"} size="lg" />
           <div className="min-w-0">
-            <h2 className="truncate text-sm font-bold text-neutral-900">{displayName}</h2>
+            <div className="flex items-center gap-1.5">
+              <h2 className="truncate text-sm font-bold text-neutral-900">{displayName}</h2>
+              {conversation.channel === "line" && (
+                <span className="shrink-0 rounded bg-[#06C755] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                  LINE
+                </span>
+              )}
+            </div>
             <p className="truncate text-xs text-neutral-400">
-              {conversation.visitorEmail ?? "ไม่ทราบอีเมล"}
+              {conversation.visitorEmail ?? (conversation.channel === "line" ? "ทักจาก LINE OA" : "ไม่ทราบอีเมล")}
               {conversation.visitorPhone ? ` · ${conversation.visitorPhone}` : ""}
             </p>
           </div>

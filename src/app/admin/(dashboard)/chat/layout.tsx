@@ -23,6 +23,7 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
     return {
       id: c.id,
       displayName: c.customer?.name || c.visitorName || `ผู้เยี่ยมชม #${c.id.slice(-5)}`,
+      channel: c.channel,
       subtitle: c.visitorEmail,
       lastMessagePreview: lastMessage
         ? `${lastMessage.sender === "visitor" ? "" : "คุณ: "}${lastMessage.body}`

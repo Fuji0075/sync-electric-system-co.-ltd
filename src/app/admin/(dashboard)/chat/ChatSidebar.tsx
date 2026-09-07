@@ -8,12 +8,22 @@ import ChatAvatar from "./ChatAvatar";
 export type SidebarConversation = {
   id: string;
   displayName: string;
+  channel: string;
   subtitle: string | null;
   lastMessagePreview: string | null;
   needsAttention: boolean;
   isOpen: boolean;
   updatedAtLabel: string;
 };
+
+function ChannelBadge({ channel }: { channel: string }) {
+  if (channel !== "line") return null;
+  return (
+    <span className="shrink-0 rounded bg-[#06C755] px-1.5 py-0.5 text-[9px] font-bold text-white">
+      LINE
+    </span>
+  );
+}
 
 export default function ChatSidebar({ conversations }: { conversations: SidebarConversation[] }) {
   const pathname = usePathname();
@@ -83,8 +93,11 @@ export default function ChatSidebar({ conversations }: { conversations: SidebarC
                 <ChatAvatar name={c.displayName} online={c.isOpen} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-sm font-semibold text-neutral-800">
-                      {c.displayName}
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span className="truncate text-sm font-semibold text-neutral-800">
+                        {c.displayName}
+                      </span>
+                      <ChannelBadge channel={c.channel} />
                     </span>
                     <time className="shrink-0 text-[10px] text-neutral-400">{c.updatedAtLabel}</time>
                   </div>

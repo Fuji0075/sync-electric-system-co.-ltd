@@ -137,6 +137,8 @@ model Conversation {
   needsAttention Boolean   @default(false)
   unreadByVisitor Boolean  @default(false)
   status         String    @default("open")
+  channel        String    @default("web") // "web" | "line"
+  lineUserId     String?   @unique
   messages       Message[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt

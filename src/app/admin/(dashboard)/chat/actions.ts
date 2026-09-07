@@ -3,10 +3,14 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { logActivity } from "@/lib/activity-log";
+import { pushLineMessage } from "@/lib/line";
 
 export async function sendAdminReply(conversationId: string, formData: FormData) {
   const body = String(formData.get("body") ?? "").trim();
   if (!body) return;
+
+  const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } });
+  if (!conversation) return;
 
   await prisma.message.create({
     data: { conversationId, sender: "admin", body },
@@ -16,6 +20,10 @@ export async function sendAdminReply(conversationId: string, formData: FormData)
     where: { id: conversationId },
     data: { needsAttention: false, unreadByVisitor: true },
   });
+
+  if (conversation.channel === "line" && conversation.lineUserId) {
+    await pushLineMessage(conversation.lineUserId, body);
+  }
 
   await logActivity({
     action: "reply_chat",
