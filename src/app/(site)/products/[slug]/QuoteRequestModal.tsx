@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { submitQuoteRequest, type QuoteRequestState } from "../actions";
 
 const initialState: QuoteRequestState = { ok: false };
@@ -12,8 +13,21 @@ export default function QuoteRequestModal({
   productId: string;
   productName: string;
 }) {
-  const [open, setOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  // Arriving from a chat "ขอใบเสนอราคา" button (/products/slug?quote=1)
+  // opens the form immediately instead of making the visitor find the
+  // button again on the page.
+  const [open, setOpen] = useState(() => searchParams.get("quote") === "1");
   const [state, formAction, pending] = useActionState(submitQuoteRequest, initialState);
+
+  useEffect(() => {
+    if (searchParams.get("quote") === "1") {
+      router.replace(pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!open) return;

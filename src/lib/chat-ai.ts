@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { encodeQuoteButtons } from "@/lib/chat-message";
 
 type ProductRow = {
   id: string;
@@ -66,12 +67,16 @@ function scoreProduct(product: ProductRow, query: string) {
   return score;
 }
 
-function formatProductLine(p: ProductRow) {
-  const parts = [`• ${p.name} (${p.category.name})`];
-  if (p.brand) parts.push(`แบรนด์: ${p.brand}`);
-  if (p.sku) parts.push(`รหัส: ${p.sku}`);
-  parts.push(p.inStock ? "มีสินค้าพร้อมส่ง" : "สอบถามสต๊อค");
-  return parts.join(" — ");
+function formatProductBlock(p: ProductRow) {
+  // Lead with the product's own description (the same text shown on its
+  // product page) so the chat answer reads like real product info, not
+  // just a search-result label.
+  const lines = [`• ${p.name} (${p.category.name})`, `  ${p.summary}`];
+  const meta = [p.inStock ? "มีสินค้าพร้อมส่ง" : "สอบถามสต๊อค"];
+  if (p.brand) meta.push(`แบรนด์: ${p.brand}`);
+  if (p.sku) meta.push(`รหัส: ${p.sku}`);
+  lines.push(`  ${meta.join(" — ")}`);
+  return lines.join("\n");
 }
 
 /**
@@ -120,24 +125,30 @@ export async function generateAiReply(message: string): Promise<string | null> {
 
   if (wantsCompare && scored.length >= 2) {
     const [a, b] = scored;
-    return [
+    const compareButtons = encodeQuoteButtons([
+      { slug: a.product.slug, name: a.product.name },
+      { slug: b.product.slug, name: b.product.name },
+    ]);
+    const compareText = [
       `เปรียบเทียบสินค้าที่เกี่ยวข้องค่ะ:`,
-      formatProductLine(a.product),
-      `  ${a.product.summary}`,
-      formatProductLine(b.product),
-      `  ${b.product.summary}`,
-      `หากต้องการสเปคละเอียดหรือใบเสนอราคา แจ้งชื่อรุ่นที่สนใจได้เลยค่ะ`,
+      formatProductBlock(a.product),
+      formatProductBlock(b.product),
+      `หากต้องการสเปคละเอียดหรือใบเสนอราคา แจ้งชื่อรุ่นที่สนใจ หรือกดปุ่มด้านล่างได้เลยค่ะ`,
     ].join("\n");
+    return compareText + compareButtons;
   }
 
   const top = scored.slice(0, 3);
-  const lines = top.map((r) => `${formatProductLine(r.product)}\n  ${r.product.summary}`);
+  const lines = top.map((r) => formatProductBlock(r.product));
+  const buttons = encodeQuoteButtons(
+    top.map((r) => ({ slug: r.product.slug, name: r.product.name }))
+  );
 
   const suffix = wantsContact
-    ? "\n\nสนใจรุ่นไหนสามารถกดปุ่ม \"ขอใบเสนอราคา\" ที่หน้าสินค้านั้นได้เลยค่ะ"
-    : "\n\nต้องการรายละเอียดเพิ่มเติมหรือใบเสนอราคาแจ้งได้เลยค่ะ";
+    ? "\n\nสนใจรุ่นไหนกดปุ่ม \"ขอใบเสนอราคา\" ด้านล่างได้เลยค่ะ"
+    : "\n\nต้องการรายละเอียดเพิ่มเติมหรือใบเสนอราคา กดปุ่มด้านล่างหรือแจ้งได้เลยค่ะ";
 
-  return `พบสินค้าที่เกี่ยวข้องค่ะ:\n${lines.join("\n")}${suffix}`;
+  return `พบสินค้าที่เกี่ยวข้องค่ะ:\n${lines.join("\n")}${suffix}${buttons}`;
 }
 
 /**

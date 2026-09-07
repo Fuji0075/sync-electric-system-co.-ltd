@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { sendAdminReply, closeConversation } from "../actions";
 import { createQuoteFromConversation } from "../../quotations/actions";
 import AutoRefresh from "@/components/AutoRefresh";
+import { parseChatMessage } from "@/lib/chat-message";
 
 const SENDER_LABEL: Record<string, string> = {
   visitor: "ลูกค้า",
@@ -76,6 +77,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
         <div className="flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-4">
           {conversation.messages.map((m) => {
             const isVisitor = m.sender === "visitor";
+            const { text } = parseChatMessage(m.body);
             return (
               <div key={m.id} className={`flex ${isVisitor ? "justify-start" : "justify-end"}`}>
                 <div
@@ -90,7 +92,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
                   <p className="mb-0.5 text-[10px] font-semibold opacity-70">
                     {SENDER_LABEL[m.sender] ?? m.sender}
                   </p>
-                  {m.body}
+                  {text}
                 </div>
               </div>
             );

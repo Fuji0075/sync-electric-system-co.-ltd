@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { parseChatMessage } from "@/lib/chat-message";
 
 type ChatMessage = {
   id: string;
@@ -103,6 +105,7 @@ export default function ChatWidget() {
             )}
             {messages.map((m) => {
               const isVisitor = m.sender === "visitor";
+              const { text, quoteButtons } = parseChatMessage(m.body);
               return (
                 <div key={m.id} className={`flex ${isVisitor ? "justify-end" : "justify-start"}`}>
                   <div
@@ -119,7 +122,20 @@ export default function ChatWidget() {
                         {SENDER_LABEL[m.sender]}
                       </p>
                     )}
-                    {m.body}
+                    {text}
+                    {quoteButtons.length > 0 && (
+                      <div className="mt-2 flex flex-col gap-1.5">
+                        {quoteButtons.map((b) => (
+                          <Link
+                            key={b.slug}
+                            href={`/products/${b.slug}?quote=1`}
+                            className="inline-flex items-center justify-center gap-1 rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+                          >
+                            🧾 ขอใบเสนอราคา: {b.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
