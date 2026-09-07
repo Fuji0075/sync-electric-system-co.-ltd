@@ -16,6 +16,9 @@ type ProductRow = {
 const GREETING_WORDS = ["สวัสดี", "หวัดดี", "hello", "hi"];
 const COMPARE_WORDS = ["เปรียบเทียบ", "ต่างกัน", "แตกต่าง", "vs", "compare"];
 const CONTACT_WORDS = ["ราคา", "เสนอราคา", "quotation", "quote", "สั่งซื้อ", "ติดต่อ"];
+const SPEC_WORDS = ["สเปค", "สเปก", "spec", "specification", "คุณสมบัติ"];
+const PRODUCT_WORDS = ["สินค้า", "product", "รุ่น", "อุปกรณ์"];
+const GENERAL_INTENT_WORDS = [...COMPARE_WORDS, ...CONTACT_WORDS, ...SPEC_WORDS, ...PRODUCT_WORDS];
 
 function normalize(text: string) {
   return text.toLowerCase().trim();
@@ -97,10 +100,20 @@ export async function generateAiReply(message: string): Promise<string | null> {
 
   const wantsCompare = COMPARE_WORDS.some((w) => query.includes(w));
   const wantsContact = CONTACT_WORDS.some((w) => query.includes(w));
+  const wantsGeneralInfo = GENERAL_INTENT_WORDS.some((w) => query.includes(w));
 
   if (scored.length === 0) {
-    if (wantsContact) {
-      return "สำหรับใบเสนอราคา สามารถกดปุ่ม \"ขอใบเสนอราคา\" ที่หน้าสินค้าได้เลยค่ะ ทีมขายจะติดต่อกลับโดยเร็วที่สุด หรือแจ้งชื่อสินค้าที่สนใจในแชทนี้ได้เลยค่ะ";
+    if (wantsGeneralInfo) {
+      const categories = await prisma.category.findMany({ orderBy: { order: "asc" } });
+      const categoryList = categories.map((c) => `• ${c.name}`).join("\n");
+      return [
+        "รบกวนแจ้งชื่อสินค้าหรือรุ่นที่สนใจได้ไหมคะ จะได้ส่งสเปค/ราคาให้ตรงรุ่นเลยค่ะ 🙂",
+        "",
+        "ตอนนี้เรามีสินค้ากลุ่มหลักๆ ดังนี้ค่ะ:",
+        categoryList,
+        "",
+        "พิมพ์ชื่อกลุ่มหรือรุ่นที่สนใจได้เลยค่ะ",
+      ].join("\n");
     }
     return null;
   }
