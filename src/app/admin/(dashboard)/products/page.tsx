@@ -26,6 +26,7 @@ export default async function AdminProductsPage() {
             <tr>
               <th className="px-4 py-3">ชื่อสินค้า</th>
               <th className="px-4 py-3">หมวดหมู่</th>
+              <th className="px-4 py-3">ราคา</th>
               <th className="px-4 py-3">สต๊อค</th>
               <th className="px-4 py-3">แนะนำ</th>
               <th className="px-4 py-3 text-right">จัดการ</th>
@@ -36,6 +37,9 @@ export default async function AdminProductsPage() {
               <tr key={p.id}>
                 <td className="px-4 py-3 font-medium text-neutral-800">{p.name}</td>
                 <td className="px-4 py-3 text-neutral-500">{p.category.name}</td>
+                <td className="px-4 py-3 text-neutral-500">
+                  {p.price != null ? `${p.price.toLocaleString("th-TH")} บาท` : "-"}
+                </td>
                 <td className="px-4 py-3">
                   {p.inStock ? (
                     <span className="text-brand-dark">● พร้อมส่ง</span>
@@ -68,7 +72,7 @@ export default async function AdminProductsPage() {
             ))}
             {products.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-neutral-400">
+                <td colSpan={6} className="px-4 py-8 text-center text-neutral-400">
                   ยังไม่มีสินค้า
                 </td>
               </tr>

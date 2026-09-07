@@ -9,6 +9,7 @@ const KEYS = [
   "address_th",
   "address_en",
   "phone",
+  "fax",
   "mobile",
   "email",
   "line_id",

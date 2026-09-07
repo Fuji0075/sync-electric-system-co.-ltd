@@ -7,6 +7,7 @@ const FIELDS: { key: string; label: string; textarea?: boolean }[] = [
   { key: "address_th", label: "ที่อยู่ (ไทย)", textarea: true },
   { key: "address_en", label: "ที่อยู่ (อังกฤษ)", textarea: true },
   { key: "phone", label: "เบอร์โทรศัพท์" },
+  { key: "fax", label: "แฟกซ์" },
   { key: "mobile", label: "เบอร์มือถือ" },
   { key: "email", label: "อีเมล" },
   { key: "line_id", label: "Line ID" },

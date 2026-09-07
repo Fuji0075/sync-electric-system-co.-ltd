@@ -10,6 +10,7 @@ type ProductFormProps = {
     imageUrl: string | null;
     brand: string | null;
     sku: string | null;
+    price: number | null;
     categoryId: string;
     inStock: boolean;
     featured: boolean;
@@ -84,6 +85,20 @@ export default function ProductForm({ action, categories, defaultValues }: Produ
             className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-neutral-700">
+          ราคาต่อหน่วย (บาท) — ใช้เป็นราคาตั้งต้นตอนสร้างใบเสนอราคา
+        </label>
+        <input
+          name="price"
+          type="number"
+          step="0.01"
+          min="0"
+          defaultValue={defaultValues?.price ?? ""}
+          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+        />
       </div>
 
       <div>

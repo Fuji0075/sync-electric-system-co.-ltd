@@ -37,6 +37,7 @@ model Product {
   imageUrl    String?
   brand       String?
   sku         String?
+  price       Float?
   inStock     Boolean  @default(true)
   featured    Boolean  @default(false)
   categoryId  String
@@ -146,4 +147,40 @@ model QuoteRequest {
   status      String    @default("new")
   emailSent   Boolean   @default(false)
   createdAt   DateTime  @default(now())
+}
+
+model QuoteDocument {
+  id             String      @id @default(cuid())
+  quoteNumber    String      @unique
+  status         String      @default("draft") // draft | approved | sent
+  conversationId String?
+  quoteRequestId String?
+  issueDate      DateTime    @default(now())
+  companyName    String?
+  attn           String?
+  tel            String?
+  fax            String?
+  email          String?
+  creditTerm     String      @default("0")
+  deliveryDays   String      @default("")
+  validityDays   Int         @default(20)
+  vatPercent     Float       @default(7)
+  salesName      String?
+  salesPhone     String?
+  notes          String?
+  items          QuoteItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  sentAt         DateTime?
+}
+
+model QuoteItem {
+  id              String        @id @default(cuid())
+  quoteDocumentId String
+  quoteDocument   QuoteDocument @relation(fields: [quoteDocumentId], references: [id], onDelete: Cascade)
+  order           Int           @default(0)
+  description     String
+  quantity        Float         @default(1)
+  unit            String        @default("UNIT")
+  unitPrice       Float         @default(0)
 }

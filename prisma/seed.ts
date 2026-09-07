@@ -20,58 +20,68 @@ const categories = [
 
 const productsByCategory: Record<
   string,
-  { name: string; summary: string }[]
+  { name: string; summary: string; price: number }[]
 > = {
   "induction-motor": [
     {
       name: "Induction Motor 3 Phase",
       summary: "มอเตอร์ไฟฟ้าเหนี่ยวนำ 3 เฟส ทนทาน ใช้งานในอุตสาหกรรมหนัก",
+      price: 4500,
     },
     {
       name: "Induction Motor 1 Phase",
       summary: "มอเตอร์ไฟฟ้าเหนี่ยวนำ 1 เฟส เหมาะกับงานขนาดเล็กถึงกลาง",
+      price: 3200,
     },
   ],
   "gear-motor": [
     {
       name: "Helical Gear Motor",
       summary: "มอเตอร์เกียร์เฮลิคอล ส่งกำลังเรียบ เสียงเงียบ ประสิทธิภาพสูง",
+      price: 5490,
     },
     {
       name: "Cyclo Drive Gear",
       summary: "เกียร์ทดรอบ Cyclo Drive รับแรงบิดสูง เหมาะกับงานหนัก",
+      price: 8900,
     },
     {
       name: "Planetary Gear",
       summary: "เกียร์ดาวเคราะห์ ขนาดกะทัดรัด อัตราทดสูง แม่นยำ",
+      price: 6750,
     },
     {
       name: "Worm Gear Box",
       summary: "เกียร์บ็อกซ์เวิร์ม โครงสร้างแข็งแรง ราคาคุ้มค่า",
+      price: 3900,
     },
   ],
   inverter: [
     {
       name: "Inverter VFD",
       summary: "อินเวอร์เตอร์ควบคุมความเร็วรอบมอเตอร์ ประหยัดพลังงาน",
+      price: 4200,
     },
   ],
   brake: [
     {
       name: "Electromagnetic Brake",
       summary: "เบรกไฟฟ้าสำหรับมอเตอร์ หยุดแม่นยำ ปลอดภัยสูง",
+      price: 2800,
     },
   ],
   "water-pump": [
     {
       name: "Industrial Water Pump",
       summary: "ปั๊มน้ำสำหรับงานอุตสาหกรรม ทนทาน แรงดันสูง",
+      price: 7300,
     },
   ],
   resistor: [
     {
       name: "Braking Resistor",
       summary: "ตัวต้านทานเบรกสำหรับระบบขับเคลื่อนมอเตอร์และอินเวอร์เตอร์",
+      price: 1500,
     },
   ],
 };
@@ -109,13 +119,14 @@ async function main() {
       const slug = slugify(`${cat.slug}-${p.name}`);
       await prisma.product.upsert({
         where: { slug },
-        update: {},
+        update: { price: p.price },
         create: {
           name: p.name,
           slug,
           summary: p.summary,
           description: `${p.summary}\n\nสินค้าคุณภาพมาตรฐาน มีสต๊อคพร้อมส่ง พร้อมบริการหลังการขายตลอดอายุการใช้งาน โดยทีมงานผู้เชี่ยวชาญด้านสินค้าอุตสาหกรรมกว่า 20 ปี สอบถามข้อมูลเพิ่มเติมหรือขอใบเสนอราคาได้ที่ทีมขาย Sync Electric System`,
           categoryId: category.id,
+          price: p.price,
           featured: true,
         },
       });
@@ -230,6 +241,7 @@ async function main() {
       value: "23/49 Moo. 5 Phuttaraksa Rd., T.Phraeksamai, A.MuangSamutprakarn, Samutprakarn, 10280 Thailand.",
     },
     { key: "phone", value: "02-3474318-9, 02-3474173-4" },
+    { key: "fax", value: "02-7037325" },
     { key: "mobile", value: "081-573-4588" },
     { key: "email", value: "sales03@sync-electric.com" },
     { key: "line_id", value: "@sync" },

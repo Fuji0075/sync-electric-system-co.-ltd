@@ -10,6 +10,7 @@ const DEFAULTS: SiteSettings = {
   address_en:
     "23/49 Moo. 5 Phuttaraksa Rd., T.Phraeksamai, A.MuangSamutprakarn, Samutprakarn, 10280 Thailand.",
   phone: "02-3474318-9, 02-3474173-4",
+  fax: "02-7037325",
   mobile: "081-573-4588",
   email: "sales03@sync-electric.com",
   line_id: "@sync",

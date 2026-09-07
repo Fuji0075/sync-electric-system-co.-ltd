@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { updateQuoteStatus, deleteQuoteRequest } from "./actions";
+import { createQuoteFromQuoteRequest } from "../quotations/actions";
 
 const STATUS_LABEL: Record<string, string> = {
   new: "รอติดต่อกลับ",
@@ -44,6 +45,19 @@ export default async function AdminQuotesPage() {
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
+              <form
+                action={async () => {
+                  "use server";
+                  await createQuoteFromQuoteRequest(q.id);
+                }}
+              >
+                <button
+                  type="submit"
+                  className="rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+                >
+                  🧾 สร้างใบเสนอราคา
+                </button>
+              </form>
               {Object.entries(STATUS_LABEL).map(([value, label]) => (
                 <form
                   key={value}

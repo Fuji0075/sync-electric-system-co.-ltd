@@ -13,6 +13,7 @@ export default async function AdminDashboardPage() {
     conversationsNeedingAttention,
     newQuotes,
     totalQuotes,
+    draftQuotations,
   ] = await Promise.all([
     prisma.product.count(),
     prisma.category.count(),
@@ -23,6 +24,7 @@ export default async function AdminDashboardPage() {
     prisma.conversation.count({ where: { needsAttention: true } }),
     prisma.quoteRequest.count({ where: { status: "new" } }),
     prisma.quoteRequest.count(),
+    prisma.quoteDocument.count({ where: { status: { in: ["draft", "approved"] } } }),
   ]);
 
   const cards = [
@@ -44,11 +46,18 @@ export default async function AdminDashboardPage() {
       highlight: conversationsNeedingAttention > 0,
     },
     {
-      label: "ใบเสนอราคา (รอติดต่อกลับ)",
+      label: "คำขอใบเสนอราคา (รอติดต่อกลับ)",
       value: `${newQuotes}/${totalQuotes}`,
       href: "/admin/quotes",
-      icon: "🧾",
+      icon: "📥",
       highlight: newQuotes > 0,
+    },
+    {
+      label: "ใบเสนอราคา (ฉบับร่าง/รออนุมัติ)",
+      value: draftQuotations,
+      href: "/admin/quotations",
+      icon: "🧾",
+      highlight: draftQuotations > 0,
     },
   ];
 

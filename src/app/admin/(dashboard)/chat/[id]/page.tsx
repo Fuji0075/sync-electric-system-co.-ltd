@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { sendAdminReply, closeConversation } from "../actions";
+import { createQuoteFromConversation } from "../../quotations/actions";
 import AutoRefresh from "@/components/AutoRefresh";
 
 const SENDER_LABEL: Record<string, string> = {
@@ -39,21 +40,36 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
             {conversation.visitorPhone ? ` · ${conversation.visitorPhone}` : ""}
           </p>
         </div>
-        {conversation.status !== "closed" && (
+        <div className="flex gap-2">
           <form
             action={async () => {
               "use server";
-              await closeConversation(conversation.id);
+              await createQuoteFromConversation(conversation.id);
             }}
           >
             <button
               type="submit"
-              className="rounded-full border border-neutral-300 px-4 py-2 text-xs font-semibold text-neutral-600 hover:border-red-300 hover:text-red-600"
+              className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
             >
-              ปิดการสนทนา
+              🧾 สร้างใบเสนอราคาจากแชทนี้
             </button>
           </form>
-        )}
+          {conversation.status !== "closed" && (
+            <form
+              action={async () => {
+                "use server";
+                await closeConversation(conversation.id);
+              }}
+            >
+              <button
+                type="submit"
+                className="rounded-full border border-neutral-300 px-4 py-2 text-xs font-semibold text-neutral-600 hover:border-red-300 hover:text-red-600"
+              >
+                ปิดการสนทนา
+              </button>
+            </form>
+          )}
+        </div>
       </div>
 
       <div className="flex h-[28rem] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">

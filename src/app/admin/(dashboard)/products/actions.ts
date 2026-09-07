@@ -13,6 +13,7 @@ function slugify(input: string) {
 }
 
 function readProductInput(formData: FormData) {
+  const priceRaw = String(formData.get("price") ?? "").trim();
   return {
     name: String(formData.get("name") ?? "").trim(),
     summary: String(formData.get("summary") ?? "").trim(),
@@ -20,6 +21,7 @@ function readProductInput(formData: FormData) {
     imageUrl: String(formData.get("imageUrl") ?? "").trim() || null,
     brand: String(formData.get("brand") ?? "").trim() || null,
     sku: String(formData.get("sku") ?? "").trim() || null,
+    price: priceRaw ? Number(priceRaw) : null,
     categoryId: String(formData.get("categoryId") ?? ""),
     inStock: formData.get("inStock") === "on",
     featured: formData.get("featured") === "on",
