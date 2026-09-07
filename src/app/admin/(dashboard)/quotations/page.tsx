@@ -56,7 +56,11 @@ export default async function AdminQuotationsPage() {
                       <Link href={`/admin/quotations/${q.id}/edit`} className="text-brand-dark hover:underline">
                         แก้ไข
                       </Link>
-                      <Link href={`/admin/quotations/${q.id}`} className="text-brand-dark hover:underline">
+                      <Link
+                        href={`/admin/quotations/${q.id}/print`}
+                        target="_blank"
+                        className="text-brand-dark hover:underline"
+                      >
                         ดูตัวอย่าง
                       </Link>
                       <form

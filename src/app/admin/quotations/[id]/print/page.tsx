@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSiteSettings } from "@/lib/settings";
+import { getSession } from "@/lib/auth";
 import PrintButton from "./PrintButton";
 
 type Params = Promise<{ id: string }>;
@@ -9,7 +10,18 @@ function formatCurrency(n: number) {
   return n.toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+/**
+ * Deliberately outside the (dashboard) layout group — this is a
+ * print-style document, not an admin console screen, so it must not be
+ * wrapped in the sidebar/header chrome (which would otherwise print
+ * alongside the quotation and clutter the modal preview on the edit
+ * page). It still requires an admin session since it isn't nested under
+ * the dashboard layout's auth guard.
+ */
 export default async function QuoteDocumentPreviewPage({ params }: { params: Params }) {
+  const session = await getSession();
+  if (!session) redirect("/admin/login");
+
   const { id } = await params;
   const [quote, settings] = await Promise.all([
     prisma.quoteDocument.findUnique({

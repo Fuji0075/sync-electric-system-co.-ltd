@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { updateQuoteDocument, sendQuoteToCustomer } from "../../actions";
 import ItemsEditor from "./ItemsEditor";
+import QuotePreviewModal from "./QuotePreviewModal";
 
 type Params = Promise<{ id: string }>;
 
@@ -47,13 +48,7 @@ export default async function EditQuoteDocumentPage({ params }: { params: Params
           >
             {quote.status === "sent" ? "ส่งแล้ว" : quote.status === "approved" ? "อนุมัติแล้ว" : "ฉบับร่าง"}
           </span>
-          <Link
-            href={`/admin/quotations/${quote.id}`}
-            target="_blank"
-            className="rounded-full border border-neutral-300 px-4 py-2 text-xs font-semibold text-neutral-600 hover:border-brand hover:text-brand-dark"
-          >
-            ดูตัวอย่าง / พิมพ์
-          </Link>
+          <QuotePreviewModal quoteId={quote.id} />
         </div>
       </div>
 

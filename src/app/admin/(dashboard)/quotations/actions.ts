@@ -134,7 +134,7 @@ export async function updateQuoteDocument(id: string, formData: FormData) {
   ]);
 
   revalidatePath(`/admin/quotations/${id}/edit`);
-  revalidatePath(`/admin/quotations/${id}`);
+  revalidatePath(`/admin/quotations/${id}/print`);
   revalidatePath("/admin/quotations");
 }
 
@@ -199,7 +199,7 @@ export async function sendQuoteToCustomer(id: string) {
     data: { status: "sent", sentAt: new Date() },
   });
 
-  revalidatePath(`/admin/quotations/${id}`);
+  revalidatePath(`/admin/quotations/${id}/print`);
   revalidatePath(`/admin/quotations/${id}/edit`);
   revalidatePath("/admin/quotations");
 
