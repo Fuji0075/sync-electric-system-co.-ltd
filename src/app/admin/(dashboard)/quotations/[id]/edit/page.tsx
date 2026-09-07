@@ -63,6 +63,39 @@ export default async function EditQuoteDocumentPage({ params }: { params: Params
         </div>
       </div>
 
+      <div className="mb-4 flex items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+        <div className="flex items-center gap-3">
+          {quote.assignedAdmin?.signatureUrl && (
+            // eslint-disable-next-line @next/next/no-img-element -- small inline base64 signature preview
+            <img
+              src={quote.assignedAdmin.signatureUrl}
+              alt=""
+              className="h-8 rounded border border-neutral-200 bg-white p-0.5"
+            />
+          )}
+          <p className="text-sm text-neutral-600">
+            {quote.assignedAdmin ? (
+              <>
+                ผู้รับผิดชอบ: <span className="font-semibold text-neutral-800">{quote.assignedAdmin.name}</span>
+                {isMine && <span className="ml-1 text-xs text-brand-dark">(คุณ)</span>}
+              </>
+            ) : (
+              "ยังไม่มีผู้รับผิดชอบใบเสนอราคานี้"
+            )}
+          </p>
+        </div>
+        {!isMine && (
+          <form action={claimAction}>
+            <button
+              type="submit"
+              className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:border-brand hover:text-brand-dark"
+            >
+              รับผิดชอบใบนี้ (ใช้ชื่อ/ลายเซ็นของฉัน)
+            </button>
+          </form>
+        )}
+      </div>
+
       <form action={action} className="space-y-6 rounded-2xl border border-neutral-200 bg-white p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -148,39 +181,6 @@ export default async function EditQuoteDocumentPage({ params }: { params: Params
         <div>
           <h2 className="mb-2 text-sm font-semibold text-neutral-900">รายการสินค้า</h2>
           <ItemsEditor initialItems={quote.items} initialVatPercent={quote.vatPercent} />
-        </div>
-
-        <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-3">
-          <div className="flex items-center gap-3">
-            {quote.assignedAdmin?.signatureUrl && (
-              // eslint-disable-next-line @next/next/no-img-element -- small inline base64 signature preview
-              <img
-                src={quote.assignedAdmin.signatureUrl}
-                alt=""
-                className="h-8 rounded border border-neutral-200 bg-white p-0.5"
-              />
-            )}
-            <p className="text-sm text-neutral-600">
-              {quote.assignedAdmin ? (
-                <>
-                  ผู้รับผิดชอบ: <span className="font-semibold text-neutral-800">{quote.assignedAdmin.name}</span>
-                  {isMine && <span className="ml-1 text-xs text-brand-dark">(คุณ)</span>}
-                </>
-              ) : (
-                "ยังไม่มีผู้รับผิดชอบใบเสนอราคานี้"
-              )}
-            </p>
-          </div>
-          {!isMine && (
-            <form action={claimAction}>
-              <button
-                type="submit"
-                className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:border-brand hover:text-brand-dark"
-              >
-                รับผิดชอบใบนี้ (ใช้ชื่อ/ลายเซ็นของฉัน)
-              </button>
-            </form>
-          )}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
