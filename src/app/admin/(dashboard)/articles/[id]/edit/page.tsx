@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ArticleForm from "../../ArticleForm";
 import { updateArticle } from "../../actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 type Params = Promise<{ id: string }>;
 
 export default async function EditArticlePage({ params }: { params: Params }) {
+  await requireModuleAccess("articles");
   const { id } = await params;
   const article = await prisma.article.findUnique({ where: { id } });
   if (!article) notFound();

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { deleteQuoteDocument } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
   draft: { label: "ฉบับร่าง", className: "bg-neutral-100 text-neutral-600" },
@@ -9,6 +10,7 @@ const STATUS_LABEL: Record<string, { label: string; className: string }> = {
 };
 
 export default async function AdminQuotationsPage() {
+  await requireModuleAccess("quotations");
   const quotes = await prisma.quoteDocument.findMany({
     orderBy: { createdAt: "desc" },
     include: { items: true },

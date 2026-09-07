@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductForm from "../../ProductForm";
 import { updateProduct } from "../../actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 type Params = Promise<{ id: string }>;
 
 export default async function EditProductPage({ params }: { params: Params }) {
+  await requireModuleAccess("products");
   const { id } = await params;
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({ where: { id } }),

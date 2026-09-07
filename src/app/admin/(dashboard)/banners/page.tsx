@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { deleteBanner } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function AdminBannersPage() {
+  await requireModuleAccess("banners");
   const banners = await prisma.banner.findMany({ orderBy: { order: "asc" } });
 
   return (

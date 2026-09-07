@@ -29,6 +29,10 @@ export async function login(_prevState: LoginState, formData: FormData): Promise
     return { error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
   }
 
+  if (!user.active) {
+    return { error: "บัญชีนี้ถูกปิดใช้งาน กรุณาติดต่อ Super Admin" };
+  }
+
   const token = signSession({ sub: user.id, email: user.email, name: user.name });
   await setSessionCookie(token);
   redirect("/admin");

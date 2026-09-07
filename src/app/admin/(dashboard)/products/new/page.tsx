@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import ProductForm from "../ProductForm";
 import { createProduct } from "../actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function NewProductPage() {
+  await requireModuleAccess("products");
   const categories = await prisma.category.findMany({ orderBy: { order: "asc" } });
 
   return (

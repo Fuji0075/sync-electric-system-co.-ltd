@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { createCatalogFile, deleteCatalogFile } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function AdminCatalogPage() {
+  await requireModuleAccess("catalog");
   const files = await prisma.catalogFile.findMany({ orderBy: { order: "asc" } });
 
   return (

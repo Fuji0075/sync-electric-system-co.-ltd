@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { deleteArticle } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function AdminArticlesPage() {
+  await requireModuleAccess("articles");
   const articles = await prisma.article.findMany({ orderBy: { publishedAt: "desc" } });
 
   return (

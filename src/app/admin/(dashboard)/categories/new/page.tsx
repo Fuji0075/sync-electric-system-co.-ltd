@@ -1,7 +1,9 @@
 import CategoryForm from "../CategoryForm";
 import { createCategory } from "../actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
-export default function NewCategoryPage() {
+export default async function NewCategoryPage() {
+  await requireModuleAccess("categories");
   return (
     <div>
       <h1 className="mb-6 text-xl font-bold text-neutral-900">เพิ่มหมวดหมู่สินค้า</h1>

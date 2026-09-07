@@ -1,7 +1,7 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSiteSettings } from "@/lib/settings";
-import { getSession } from "@/lib/auth";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 import PrintButton from "./PrintButton";
 
 type Params = Promise<{ id: string }>;
@@ -15,12 +15,11 @@ function formatCurrency(n: number) {
  * print-style document, not an admin console screen, so it must not be
  * wrapped in the sidebar/header chrome (which would otherwise print
  * alongside the quotation and clutter the modal preview on the edit
- * page). It still requires an admin session since it isn't nested under
- * the dashboard layout's auth guard.
+ * page). It still requires admin auth + the "quotations" permission
+ * since it isn't nested under the dashboard layout's guards.
  */
 export default async function QuoteDocumentPreviewPage({ params }: { params: Params }) {
-  const session = await getSession();
-  if (!session) redirect("/admin/login");
+  await requireModuleAccess("quotations");
 
   const { id } = await params;
   const [quote, settings] = await Promise.all([

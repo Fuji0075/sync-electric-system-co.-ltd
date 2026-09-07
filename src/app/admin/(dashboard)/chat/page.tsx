@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import AutoRefresh from "@/components/AutoRefresh";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function AdminChatListPage() {
+  await requireModuleAccess("chat");
   const conversations = await prisma.conversation.findMany({
     orderBy: { updatedAt: "desc" },
     include: {

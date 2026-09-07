@@ -1,28 +1,30 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
 import { logout } from "../actions";
+import { getCurrentAdminAccess, canAccess, isSuperAdmin, type ModuleKey } from "@/lib/admin-permissions";
 
-const NAV = [
+const NAV: { href: string; label: string; icon: string; module?: ModuleKey }[] = [
   { href: "/admin", label: "แดชบอร์ด", icon: "📊" },
-  { href: "/admin/banners", label: "แบนเนอร์หน้าแรก", icon: "🖼️" },
-  { href: "/admin/categories", label: "หมวดหมู่สินค้า", icon: "🗂️" },
-  { href: "/admin/products", label: "สินค้า", icon: "⚙️" },
-  { href: "/admin/articles", label: "บทความ", icon: "📰" },
-  { href: "/admin/catalog", label: "แค็ตตาล็อก", icon: "📄" },
-  { href: "/admin/messages", label: "ข้อความติดต่อ", icon: "✉️" },
-  { href: "/admin/chat", label: "แชทกับลูกค้า", icon: "💬" },
-  { href: "/admin/quotes", label: "คำขอใบเสนอราคา", icon: "📥" },
-  { href: "/admin/quotations", label: "ใบเสนอราคา", icon: "🧾" },
+  { href: "/admin/banners", label: "แบนเนอร์หน้าแรก", icon: "🖼️", module: "banners" },
+  { href: "/admin/categories", label: "หมวดหมู่สินค้า", icon: "🗂️", module: "categories" },
+  { href: "/admin/products", label: "สินค้า", icon: "⚙️", module: "products" },
+  { href: "/admin/articles", label: "บทความ", icon: "📰", module: "articles" },
+  { href: "/admin/catalog", label: "แค็ตตาล็อก", icon: "📄", module: "catalog" },
+  { href: "/admin/messages", label: "ข้อความติดต่อ", icon: "✉️", module: "messages" },
+  { href: "/admin/chat", label: "แชทกับลูกค้า", icon: "💬", module: "chat" },
+  { href: "/admin/quotes", label: "คำขอใบเสนอราคา", icon: "📥", module: "quotes" },
+  { href: "/admin/quotations", label: "ใบเสนอราคา", icon: "🧾", module: "quotations" },
   { href: "/admin/profile", label: "โปรไฟล์ของฉัน", icon: "✍️" },
-  { href: "/admin/settings", label: "ตั้งค่าเว็บไซต์", icon: "🔧" },
+  { href: "/admin/settings", label: "ตั้งค่าเว็บไซต์", icon: "🔧", module: "settings" },
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
-  if (!session) {
+  const admin = await getCurrentAdminAccess();
+  if (!admin) {
     redirect("/admin/login");
   }
+
+  const visibleNav = NAV.filter((item) => !item.module || canAccess(admin, item.module));
 
   return (
     <div className="flex min-h-screen bg-neutral-50">
@@ -37,7 +39,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <p className="mt-2 text-xs text-neutral-400">Admin Console</p>
         </div>
         <nav className="flex flex-col gap-1 p-3">
-          {NAV.map((item) => (
+          {visibleNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -47,13 +49,27 @@ export default async function DashboardLayout({ children }: { children: React.Re
               {item.label}
             </Link>
           ))}
+          {isSuperAdmin(admin) && (
+            <Link
+              href="/admin/users"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
+            >
+              <span>👤</span>
+              จัดการผู้ใช้
+            </Link>
+          )}
         </nav>
       </aside>
 
       <div className="flex-1">
         <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
           <span className="text-sm text-neutral-500">
-            เข้าสู่ระบบในชื่อ <strong className="text-neutral-800">{session.name}</strong>
+            เข้าสู่ระบบในชื่อ <strong className="text-neutral-800">{admin.name}</strong>
+            {isSuperAdmin(admin) && (
+              <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                SUPER ADMIN
+              </span>
+            )}
           </span>
           <div className="flex items-center gap-3">
             <Link href="/" target="_blank" className="text-xs text-neutral-500 hover:text-brand-dark">

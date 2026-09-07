@@ -1,5 +1,6 @@
 import { getSiteSettings } from "@/lib/settings";
 import { updateSettings } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 const FIELDS: { key: string; label: string; textarea?: boolean }[] = [
   { key: "company_name_th", label: "ชื่อบริษัท (ไทย)" },
@@ -16,6 +17,7 @@ const FIELDS: { key: string; label: string; textarea?: boolean }[] = [
 ];
 
 export default async function AdminSettingsPage() {
+  await requireModuleAccess("settings");
   const settings = await getSiteSettings();
 
   return (

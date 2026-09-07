@@ -5,6 +5,7 @@ import { getSession } from "@/lib/auth";
 import { updateQuoteDocument, sendQuoteToCustomer, claimQuote } from "../../actions";
 import ItemsEditor from "./ItemsEditor";
 import QuotePreviewModal from "./QuotePreviewModal";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 type Params = Promise<{ id: string }>;
 
@@ -13,6 +14,7 @@ function toDateInputValue(d: Date) {
 }
 
 export default async function EditQuoteDocumentPage({ params }: { params: Params }) {
+  await requireModuleAccess("quotations");
   const { id } = await params;
   const [quote, session] = await Promise.all([
     prisma.quoteDocument.findUnique({

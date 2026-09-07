@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { deleteCategory } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function AdminCategoriesPage() {
+  await requireModuleAccess("categories");
   const categories = await prisma.category.findMany({
     orderBy: { order: "asc" },
     include: { _count: { select: { products: true } } },

@@ -17,6 +17,9 @@ model AdminUser {
   name           String
   phone          String?
   signatureUrl   String?
+  role           String          @default("admin") // "super_admin" | "admin"
+  permissions    String          @default("") // comma-separated module keys; ignored for super_admin
+  active         Boolean         @default(true)
   createdAt      DateTime        @default(now())
   quoteDocuments QuoteDocument[]
 }

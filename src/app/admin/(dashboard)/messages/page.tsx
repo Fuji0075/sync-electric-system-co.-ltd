@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { markMessageRead, deleteMessage } from "./actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 export default async function AdminMessagesPage() {
+  await requireModuleAccess("messages");
   const messages = await prisma.contactMessage.findMany({ orderBy: { createdAt: "desc" } });
 
   return (

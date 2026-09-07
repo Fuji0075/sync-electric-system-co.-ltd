@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { updateQuoteStatus, deleteQuoteRequest } from "./actions";
 import { createQuoteFromQuoteRequest } from "../quotations/actions";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 const STATUS_LABEL: Record<string, string> = {
   new: "รอติดต่อกลับ",
@@ -9,6 +10,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function AdminQuotesPage() {
+  await requireModuleAccess("quotes");
   const quotes = await prisma.quoteRequest.findMany({ orderBy: { createdAt: "desc" } });
 
   return (

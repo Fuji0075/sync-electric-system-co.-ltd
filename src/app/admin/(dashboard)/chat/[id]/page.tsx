@@ -5,6 +5,7 @@ import { sendAdminReply, closeConversation } from "../actions";
 import { createQuoteFromConversation } from "../../quotations/actions";
 import AutoRefresh from "@/components/AutoRefresh";
 import { parseChatMessage } from "@/lib/chat-message";
+import { requireModuleAccess } from "@/lib/admin-permissions";
 
 const SENDER_LABEL: Record<string, string> = {
   visitor: "ลูกค้า",
@@ -15,6 +16,7 @@ const SENDER_LABEL: Record<string, string> = {
 type Params = Promise<{ id: string }>;
 
 export default async function AdminChatThreadPage({ params }: { params: Params }) {
+  await requireModuleAccess("chat");
   const { id } = await params;
   const conversation = await prisma.conversation.findUnique({
     where: { id },
