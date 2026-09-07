@@ -50,13 +50,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </Link>
           ))}
           {isSuperAdmin(admin) && (
-            <Link
-              href="/admin/users"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
-            >
-              <span>👤</span>
-              จัดการผู้ใช้
-            </Link>
+            <>
+              <Link
+                href="/admin/users"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
+              >
+                <span>👤</span>
+                จัดการผู้ใช้
+              </Link>
+              <Link
+                href="/admin/logs"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
+              >
+                <span>📋</span>
+                ประวัติการทำงาน
+              </Link>
+            </>
           )}
         </nav>
       </aside>

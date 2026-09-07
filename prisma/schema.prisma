@@ -22,6 +22,19 @@ model AdminUser {
   active         Boolean         @default(true)
   createdAt      DateTime        @default(now())
   quoteDocuments QuoteDocument[]
+  activityLogs   ActivityLog[]
+}
+
+model ActivityLog {
+  id          String     @id @default(cuid())
+  adminId     String?
+  admin       AdminUser? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  adminName   String // snapshot at the time of the action, survives admin deletion
+  action      String // e.g. "login", "reply_chat", "create_quote", "send_quote"
+  description String
+  targetType  String?
+  targetId    String?
+  createdAt   DateTime   @default(now())
 }
 
 model Category {

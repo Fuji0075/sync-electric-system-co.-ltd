@@ -8,6 +8,7 @@ import { findMatchedProductsForQuote } from "@/lib/chat-ai";
 import { sendMail } from "@/lib/mail";
 import { getSiteSettings } from "@/lib/settings";
 import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity-log";
 
 async function getCurrentAdmin() {
   const session = await getSession();
@@ -54,6 +55,13 @@ export async function createQuoteFromConversation(conversationId: string) {
     },
   });
 
+  await logActivity({
+    action: "create_quote",
+    description: `สร้างใบเสนอราคา ${quoteNumber} จากแชท`,
+    targetType: "quote",
+    targetId: quote.id,
+  });
+
   revalidatePath("/admin/quotations");
   redirect(`/admin/quotations/${quote.id}/edit`);
 }
@@ -98,6 +106,13 @@ export async function createQuoteFromQuoteRequest(quoteRequestId: string) {
 
   await prisma.quoteRequest.update({ where: { id: request.id }, data: { status: "contacted" } });
 
+  await logActivity({
+    action: "create_quote",
+    description: `สร้างใบเสนอราคา ${quoteNumber} จากคำขอใบเสนอราคา`,
+    targetType: "quote",
+    targetId: quote.id,
+  });
+
   revalidatePath("/admin/quotations");
   revalidatePath("/admin/quotes");
   redirect(`/admin/quotations/${quote.id}/edit`);
@@ -125,7 +140,7 @@ export async function updateQuoteDocument(id: string, formData: FormData) {
     }))
     .filter((item) => item.description);
 
-  await prisma.$transaction([
+  const [, updated] = await prisma.$transaction([
     prisma.quoteItem.deleteMany({ where: { quoteDocumentId: id } }),
     prisma.quoteDocument.update({
       where: { id },
@@ -149,6 +164,13 @@ export async function updateQuoteDocument(id: string, formData: FormData) {
       },
     }),
   ]);
+
+  await logActivity({
+    action: "edit_quote",
+    description: `แก้ไขใบเสนอราคา ${updated.quoteNumber}`,
+    targetType: "quote",
+    targetId: id,
+  });
 
   revalidatePath(`/admin/quotations/${id}/edit`);
   revalidatePath(`/admin/quotations/${id}/print`);
@@ -216,6 +238,13 @@ export async function sendQuoteToCustomer(id: string) {
     data: { status: "sent", sentAt: new Date() },
   });
 
+  await logActivity({
+    action: "send_quote",
+    description: `ส่งใบเสนอราคา ${quote.quoteNumber} ให้ลูกค้า (${quote.email})`,
+    targetType: "quote",
+    targetId: id,
+  });
+
   revalidatePath(`/admin/quotations/${id}/print`);
   revalidatePath(`/admin/quotations/${id}/edit`);
   revalidatePath("/admin/quotations");
@@ -224,7 +253,15 @@ export async function sendQuoteToCustomer(id: string) {
 }
 
 export async function approveQuote(id: string) {
-  await prisma.quoteDocument.update({ where: { id }, data: { status: "approved" } });
+  const quote = await prisma.quoteDocument.update({ where: { id }, data: { status: "approved" } });
+
+  await logActivity({
+    action: "approve_quote",
+    description: `อนุมัติใบเสนอราคา ${quote.quoteNumber}`,
+    targetType: "quote",
+    targetId: id,
+  });
+
   revalidatePath(`/admin/quotations/${id}/edit`);
   revalidatePath("/admin/quotations");
 }
@@ -238,9 +275,16 @@ export async function claimQuote(id: string) {
   const admin = await getCurrentAdmin();
   if (!admin) return;
 
-  await prisma.quoteDocument.update({
+  const quote = await prisma.quoteDocument.update({
     where: { id },
     data: { assignedAdminId: admin.id, salesName: admin.name, salesPhone: admin.phone },
+  });
+
+  await logActivity({
+    action: "claim_quote",
+    description: `รับผิดชอบใบเสนอราคา ${quote.quoteNumber}`,
+    targetType: "quote",
+    targetId: id,
   });
 
   revalidatePath(`/admin/quotations/${id}/edit`);
