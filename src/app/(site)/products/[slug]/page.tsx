@@ -38,12 +38,11 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       select: { brand: true },
       distinct: ["brand"],
     }),
-    product.series
-      ? prisma.product.findMany({
-          where: { series: product.series, NOT: { id: product.id } },
-          orderBy: { brand: "asc" },
-        })
-      : Promise.resolve([]),
+    prisma.product.findMany({
+      where: { categoryId: product.categoryId, NOT: { id: product.id } },
+      orderBy: { brand: "asc" },
+      take: 8,
+    }),
   ]);
 
   const specs = parseSpecs(product.specs);
@@ -53,6 +52,14 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   );
   const brands = brandRows.map((b) => b.brand).filter((b): b is string => Boolean(b));
   const highlightSpecs = specs.slice(0, 2);
+
+  const variantBrands = [
+    ...new Set([product.brand, ...variants.map((v) => v.brand)].filter((b): b is string => Boolean(b))),
+  ];
+  const specRows = [...specs];
+  if (variantBrands.length > 1) {
+    specRows.push({ label: "แบรนด์ที่จำหน่าย", value: variantBrands.join(", ") });
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
@@ -176,11 +183,6 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
       </div>
 
-      <div className="mt-16 max-w-3xl">
-        <h2 className="mb-3 text-sm font-bold text-neutral-900">รายละเอียดสินค้า</h2>
-        <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-600">{product.description}</p>
-      </div>
-
       {variants.length > 0 && (
         <div className="mt-16">
           <h2 className="mb-4 flex items-center gap-2 text-sm font-bold text-neutral-900">
@@ -209,41 +211,75 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
       )}
 
-      {(specs.length > 0 || highlights.length > 0) && (
+      {(specRows.length > 0 || highlights.length > 0 || product.description) && (
         <div className="mt-16 grid gap-8 lg:grid-cols-2">
-          {specs.length > 0 && (
+          {specRows.length > 0 && (
             <div>
               <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-neutral-900">
-                <span className="text-brand-dark">▤</span> ข้อมูลจำเพาะ (Specifications)
+                <span className="text-orange-600">▤</span> ข้อมูลจำเพาะ (SPECIFICATIONS)
               </h2>
               <div className="overflow-hidden rounded-2xl border border-neutral-200">
                 <table className="w-full text-sm">
                   <tbody className="divide-y divide-neutral-100">
-                    {specs.map((spec) => (
-                      <tr key={spec.label} className="odd:bg-neutral-50">
-                        <td className="w-2/5 px-4 py-2.5 text-neutral-500">{spec.label}</td>
-                        <td className="px-4 py-2.5 font-semibold text-neutral-900">{spec.value}</td>
-                      </tr>
-                    ))}
+                    {specRows.map((spec) => {
+                      // Split only on ", " (comma + space) so thousands-formatted
+                      // numbers like "2,000 HP" aren't mistaken for a pill list.
+                      const options = spec.value.includes(", ")
+                        ? spec.value.split(",").map((v) => v.trim()).filter(Boolean)
+                        : null;
+                      return (
+                        <tr key={spec.label} className="odd:bg-neutral-50">
+                          <td className="w-2/5 px-4 py-2.5 align-top text-neutral-500">{spec.label}</td>
+                          <td className="px-4 py-2.5 font-semibold text-neutral-900">
+                            {options ? (
+                              <div className="flex flex-wrap gap-1.5">
+                                {options.map((opt) => (
+                                  <span
+                                    key={opt}
+                                    className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-bold text-neutral-700"
+                                  >
+                                    {opt}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : (
+                              spec.value
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
+              <p className="mt-3 text-xs leading-relaxed text-neutral-400">
+                ค่าสเปกเป็นช่วงตัวอย่างตามรุ่นมาตรฐาน — โปรดแจ้งสเปกการใช้งานเพื่อรับราคาที่เหมาะสมที่สุด
+                <br />
+                รับประกันตามเงื่อนไขผู้ผลิต · มีทั้งสินค้าพร้อมส่งและสั่งผลิตตามสเปก
+              </p>
             </div>
           )}
 
-          {highlights.length > 0 && (
+          {(highlights.length > 0 || product.description) && (
             <div>
               <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-neutral-900">
-                <span className="text-brand-dark">✦</span> จุดเด่นสินค้า
+                <span className="text-orange-600">⚡</span> จุดเด่นและการใช้งาน
               </h2>
-              <ul className="space-y-2.5">
-                {highlights.map((point) => (
-                  <li key={point} className="flex items-start gap-2 text-sm text-neutral-700">
-                    <span className="mt-0.5 text-brand-dark">✔</span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
+              {product.description && (
+                <p className="mb-3 whitespace-pre-line text-sm leading-relaxed text-neutral-600">
+                  {product.description}
+                </p>
+              )}
+              {highlights.length > 0 && (
+                <ul className="space-y-2.5">
+                  {highlights.map((point) => (
+                    <li key={point} className="flex items-start gap-2 text-sm text-neutral-700">
+                      <span className="mt-0.5 font-bold text-orange-600">✓</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
         </div>

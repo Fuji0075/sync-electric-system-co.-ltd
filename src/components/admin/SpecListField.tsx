@@ -32,7 +32,8 @@ export default function SpecListField({
     <div>
       <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">{label}</label>
       <p className="mb-2 text-xs text-[var(--admin-text-faint2)]">
-        รายการแรกและรายการที่สองจะแสดงเป็นกล่องเด่นด้านบนราคาในหน้าเว็บ
+        รายการแรกและรายการที่สองจะแสดงเป็นกล่องเด่นด้านบนราคาในหน้าเว็บ · พิมพ์ค่าคั่นด้วย &ldquo;, &rdquo; (จุลภาค+เว้นวรรค)
+        เพื่อแสดงเป็นแท็กหลายอัน เช่น &ldquo;เหล็กหล่อ, อลูมิเนียม&rdquo; (ตัวเลขที่มีจุลภาคคั่นหลักพัน เช่น 2,000 จะไม่ถูกตัดเป็นแท็ก)
       </p>
       <div className="space-y-2">
         {rows.map((row, i) => (
@@ -46,7 +47,7 @@ export default function SpecListField({
             <input
               value={row.value}
               onChange={(e) => updateRow(i, "value", e.target.value)}
-              placeholder="ค่า เช่น 0.25 – 2,000 HP"
+              placeholder="ค่า เช่น 0.25 – 2,000 HP หรือ เหล็กหล่อ, อลูมิเนียม"
               className="flex-1 rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             />
             <button
