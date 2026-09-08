@@ -16,7 +16,7 @@ export default async function EditCategoryPage({ params }: { params: Params }) {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-white">แก้ไขหมวดหมู่สินค้า</h1>
+      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">แก้ไขหมวดหมู่สินค้า</h1>
       <CategoryForm action={action} defaultValues={category} />
     </div>
   );

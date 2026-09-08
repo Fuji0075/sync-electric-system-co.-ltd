@@ -19,36 +19,36 @@ export default async function EditAdminUserPage({ params }: { params: Params }) 
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-white">แก้ไขผู้ใช้ Admin</h1>
+      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">แก้ไขผู้ใช้ Admin</h1>
 
-      <form action={action} className="max-w-xl space-y-4 rounded-2xl border border-white/10 bg-[#15151b] p-6">
+      <form action={action} className="max-w-xl space-y-4 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] p-6">
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">อีเมล</label>
+          <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">อีเมล</label>
           <input
             disabled
             value={target.email}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-500"
+            className="w-full rounded-lg border border-[var(--admin-border)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text-faint)]"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">ชื่อ-นามสกุล *</label>
+          <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ชื่อ-นามสกุล *</label>
           <input
             name="name"
             required
             defaultValue={target.name}
-            className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+            className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">เบอร์โทร</label>
+          <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">เบอร์โทร</label>
           <input
             name="phone"
             defaultValue={target.phone ?? ""}
-            className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+            className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">บทบาท</label>
+          <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">บทบาท</label>
           {isSelf ? (
             <>
               {/* Disabled selects don't submit a value — use a hidden field
@@ -56,13 +56,13 @@ export default async function EditAdminUserPage({ params }: { params: Params }) 
               <select
                 disabled
                 defaultValue={target.role}
-                className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-zinc-500"
+                className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text-faint)]"
               >
                 <option value="admin">Admin (กำหนดสิทธิ์เอง)</option>
                 <option value="super_admin">Super Admin (เข้าถึงได้ทุกส่วน)</option>
               </select>
               <input type="hidden" name="role" value={target.role} />
-              <p className="mt-1 text-xs text-zinc-600">
+              <p className="mt-1 text-xs text-[var(--admin-text-faint2)]">
                 ไม่สามารถเปลี่ยนบทบาทของตัวเองได้ ให้ Super Admin คนอื่นเปลี่ยนแทน
               </p>
             </>
@@ -70,7 +70,7 @@ export default async function EditAdminUserPage({ params }: { params: Params }) 
             <select
               name="role"
               defaultValue={target.role}
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+              className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             >
               <option value="admin">Admin (กำหนดสิทธิ์เอง)</option>
               <option value="super_admin">Super Admin (เข้าถึงได้ทุกส่วน)</option>
@@ -82,7 +82,7 @@ export default async function EditAdminUserPage({ params }: { params: Params }) 
 
         <button
           type="submit"
-          className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-white hover:bg-brand-dark"
+          className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-[var(--admin-text)] hover:bg-brand-dark"
         >
           บันทึก
         </button>

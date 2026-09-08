@@ -33,19 +33,19 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3 border-b border-white/5 px-5 py-3">
+      <div className="flex items-center justify-between gap-3 border-b border-[var(--admin-border-soft)] px-5 py-3">
         <div className="flex min-w-0 items-center gap-3">
           <ChatAvatar name={displayName} online={conversation.status !== "closed"} size="lg" />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <h2 className="truncate text-sm font-bold text-white">{displayName}</h2>
+              <h2 className="truncate text-sm font-bold text-[var(--admin-text)]">{displayName}</h2>
               {conversation.channel === "line" && (
-                <span className="shrink-0 rounded bg-[#06C755] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                <span className="shrink-0 rounded bg-[#06C755] px-1.5 py-0.5 text-[9px] font-bold text-[var(--admin-text)]">
                   LINE
                 </span>
               )}
             </div>
-            <p className="truncate text-xs text-zinc-600">
+            <p className="truncate text-xs text-[var(--admin-text-faint2)]">
               {conversation.visitorEmail ?? (conversation.channel === "line" ? "ทักจาก LINE OA" : "ไม่ทราบอีเมล")}
               {conversation.visitorPhone ? ` · ${conversation.visitorPhone}` : ""}
             </p>
@@ -62,7 +62,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
             >
               <button
                 type="submit"
-                className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-zinc-400 hover:border-red-400/40 hover:text-red-400"
+                className="rounded-full border border-[var(--admin-border-strong)] px-4 py-2 text-xs font-semibold text-[var(--admin-text-muted)] hover:border-red-400/40 hover:text-red-400"
               >
                 ปิดการสนทนา
               </button>
@@ -71,7 +71,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
         </div>
       </div>
 
-      <div className="flex-1 space-y-4 overflow-y-auto bg-white/5 p-5">
+      <div className="flex-1 space-y-4 overflow-y-auto bg-[var(--admin-surface-soft)] p-5">
         {conversation.messages.map((m) => {
           const isVisitor = m.sender === "visitor";
           const isAdmin = m.sender === "admin";
@@ -83,15 +83,15 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
                 <div
                   className={`rounded-2xl px-4 py-2.5 text-sm whitespace-pre-line shadow-sm ${
                     isVisitor
-                      ? "rounded-bl-md bg-[#15151b] text-zinc-300"
+                      ? "rounded-bl-md bg-[var(--admin-surface)] text-[var(--admin-text-secondary)]"
                       : isAdmin
-                        ? "rounded-br-md bg-brand text-white"
-                        : "rounded-br-md bg-zinc-700 text-zinc-200"
+                        ? "rounded-br-md bg-brand text-[var(--admin-text)]"
+                        : "rounded-br-md bg-zinc-700 text-[var(--admin-text-secondary)]"
                   }`}
                 >
-                  {linkify(text, isVisitor ? "text-emerald-400 underline" : "text-white underline")}
+                  {linkify(text, isVisitor ? "text-emerald-400 underline" : "text-[var(--admin-text)] underline")}
                 </div>
-                <span className="mt-1 px-1 text-[10px] text-zinc-600">
+                <span className="mt-1 px-1 text-[10px] text-[var(--admin-text-faint2)]">
                   {SENDER_LABEL[m.sender] ?? m.sender} · {formatTime(m.createdAt)}
                 </span>
               </div>
@@ -99,19 +99,19 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
           );
         })}
         {conversation.messages.length === 0 && (
-          <p className="pt-10 text-center text-sm text-zinc-600">ยังไม่มีข้อความ</p>
+          <p className="pt-10 text-center text-sm text-[var(--admin-text-faint2)]">ยังไม่มีข้อความ</p>
         )}
       </div>
 
-      <form action={reply} className="flex items-center gap-2 border-t border-white/5 p-4">
+      <form action={reply} className="flex items-center gap-2 border-t border-[var(--admin-border-soft)] p-4">
         <input
           name="body"
           placeholder="Enter Message..."
-          className="flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm outline-none focus:border-brand focus:bg-[#15151b]"
+          className="flex-1 rounded-full border border-[var(--admin-border)] bg-[var(--admin-surface-soft)] px-4 py-2.5 text-sm outline-none focus:border-brand focus:bg-[var(--admin-surface)]"
         />
         <button
           type="submit"
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-white hover:bg-brand-dark"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-[var(--admin-text)] hover:bg-brand-dark"
           aria-label="ส่ง"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">

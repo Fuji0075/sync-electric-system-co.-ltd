@@ -40,7 +40,7 @@ export default function ProfileForm({
   }
 
   return (
-    <form action={formAction} className="max-w-lg space-y-5 rounded-2xl border border-white/10 bg-[#15151b] p-6">
+    <form action={formAction} className="max-w-lg space-y-5 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] p-6">
       {state.error && (
         <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600">{state.error}</p>
       )}
@@ -49,41 +49,41 @@ export default function ProfileForm({
       )}
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">ชื่อ</label>
+        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ชื่อ</label>
         <input
           disabled
           value={name}
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-500"
+          className="w-full rounded-lg border border-[var(--admin-border)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text-faint)]"
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">อีเมล</label>
+        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">อีเมล</label>
         <input
           disabled
           value={email}
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-500"
+          className="w-full rounded-lg border border-[var(--admin-border)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text-faint)]"
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">เบอร์โทร (แสดงในใบเสนอราคา)</label>
+        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">เบอร์โทร (แสดงในใบเสนอราคา)</label>
         <input
           name="phone"
           defaultValue={phone ?? ""}
-          className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+          className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
         />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">
+        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">
           รูปลายเซ็น (แสดงในใบเสนอราคาที่คุณสร้าง)
         </label>
-        <p className="mb-2 text-xs text-zinc-600">
+        <p className="mb-2 text-xs text-[var(--admin-text-faint2)]">
           แนะนำ: ถ่ายรูปลายเซ็นบนกระดาษขาว หรือเซ็นในแอปวาดภาพแล้วบันทึกเป็น PNG พื้นหลังโปร่งใส (ไม่เกิน 500KB)
         </p>
         {preview && !removeSignature && (
           <div className="mb-2 flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element -- small inline base64 signature preview */}
-            <img src={preview} alt="ลายเซ็น" className="h-16 rounded border border-white/10 bg-[#15151b] p-1" />
+            <img src={preview} alt="ลายเซ็น" className="h-16 rounded border border-[var(--admin-border)] bg-[var(--admin-surface)] p-1" />
             <button
               type="button"
               onClick={() => {
@@ -101,7 +101,7 @@ export default function ProfileForm({
           type="file"
           accept="image/png,image/jpeg,image/webp"
           onChange={handleFile}
-          className="block w-full text-sm text-zinc-400 file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-4 file:py-2 file:text-xs file:font-semibold file:text-white hover:file:bg-brand-dark"
+          className="block w-full text-sm text-[var(--admin-text-muted)] file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-4 file:py-2 file:text-xs file:font-semibold file:text-[var(--admin-text)] hover:file:bg-brand-dark"
         />
         <input type="hidden" name="signatureDataUrl" value={dataUrl} />
         <input type="hidden" name="removeSignature" value={removeSignature ? "on" : ""} />
@@ -110,7 +110,7 @@ export default function ProfileForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-white hover:bg-brand-dark disabled:opacity-60"
+        className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-[var(--admin-text)] hover:bg-brand-dark disabled:opacity-60"
       >
         {pending ? "กำลังบันทึก..." : "บันทึกโปรไฟล์"}
       </button>

@@ -52,3 +52,42 @@ body {
     transform: translateX(-50%);
   }
 }
+
+/*
+ * Admin console theme tokens. Scoped to .admin-shell (not :root) so they
+ * never touch the public site's own --background/--foreground. Dark is the
+ * default; [data-theme="light"] on the same element overrides it. The
+ * sidebar and header keep their own fixed dark+orange colors regardless —
+ * only the content area (cards/tables/forms) responds to this toggle.
+ */
+.admin-shell {
+  --admin-canvas: #0a0a0d;
+  --admin-surface: #15151b;
+  --admin-surface-soft: rgba(255, 255, 255, 0.05);
+  --admin-surface-softer: rgba(255, 255, 255, 0.1);
+  --admin-border-soft: rgba(255, 255, 255, 0.05);
+  --admin-border: rgba(255, 255, 255, 0.1);
+  --admin-border-strong: rgba(255, 255, 255, 0.15);
+  --admin-border-input: rgba(255, 255, 255, 0.2);
+  --admin-text: #ffffff;
+  --admin-text-secondary: #d4d4d8;
+  --admin-text-muted: #a1a1aa;
+  --admin-text-faint: #71717a;
+  --admin-text-faint2: #52525b;
+}
+
+.admin-shell[data-theme="light"] {
+  --admin-canvas: #f5f5f5;
+  --admin-surface: #ffffff;
+  --admin-surface-soft: #fafafa;
+  --admin-surface-softer: #f5f5f5;
+  --admin-border-soft: #f5f5f5;
+  --admin-border: #e5e5e5;
+  --admin-border-strong: #d4d4d4;
+  --admin-border-input: #d4d4d4;
+  --admin-text: #171717;
+  --admin-text-secondary: #404040;
+  --admin-text-muted: #525252;
+  --admin-text-faint: #737373;
+  --admin-text-faint2: #a3a3a3;
+}

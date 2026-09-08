@@ -60,9 +60,9 @@ export default function ItemsEditor({
 
   return (
     <div>
-      <div className="overflow-x-auto rounded-xl border border-white/10">
+      <div className="overflow-x-auto rounded-xl border border-[var(--admin-border)]">
         <table className="w-full min-w-[640px] text-sm">
-          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
+          <thead className="bg-[var(--admin-surface-soft)] text-left text-xs uppercase text-[var(--admin-text-faint)]">
             <tr>
               <th className="w-10 px-3 py-2">#</th>
               <th className="px-3 py-2">รายละเอียด</th>
@@ -73,17 +73,17 @@ export default function ItemsEditor({
               <th className="w-10 px-3 py-2" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-[var(--admin-border)]">
             {items.map((item, i) => (
               <tr key={item.key}>
-                <td className="px-3 py-2 text-zinc-600">{i + 1}</td>
+                <td className="px-3 py-2 text-[var(--admin-text-faint2)]">{i + 1}</td>
                 <td className="px-3 py-2">
                   <textarea
                     name="item_description"
                     value={item.description}
                     onChange={(e) => updateItem(item.key, "description", e.target.value)}
                     rows={2}
-                    className="w-full rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+                    className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-2 py-1.5 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
                   />
                 </td>
                 <td className="px-3 py-2">
@@ -94,7 +94,7 @@ export default function ItemsEditor({
                     min="0"
                     value={item.quantity}
                     onChange={(e) => updateItem(item.key, "quantity", e.target.value)}
-                    className="w-full rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+                    className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-2 py-1.5 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
                   />
                 </td>
                 <td className="px-3 py-2">
@@ -102,7 +102,7 @@ export default function ItemsEditor({
                     name="item_unit"
                     value={item.unit}
                     onChange={(e) => updateItem(item.key, "unit", e.target.value)}
-                    className="w-full rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+                    className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-2 py-1.5 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
                   />
                 </td>
                 <td className="px-3 py-2">
@@ -113,10 +113,10 @@ export default function ItemsEditor({
                     min="0"
                     value={item.unitPrice}
                     onChange={(e) => updateItem(item.key, "unitPrice", e.target.value)}
-                    className="w-full rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+                    className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-2 py-1.5 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
                   />
                 </td>
-                <td className="px-3 py-2 text-zinc-300">
+                <td className="px-3 py-2 text-[var(--admin-text-secondary)]">
                   {(item.quantity * item.unitPrice).toLocaleString("th-TH", {
                     minimumFractionDigits: 2,
                   })}
@@ -140,17 +140,17 @@ export default function ItemsEditor({
       <button
         type="button"
         onClick={addRow}
-        className="mt-3 rounded-full border border-white/15 px-4 py-1.5 text-xs font-semibold text-zinc-400 hover:border-brand hover:text-brand"
+        className="mt-3 rounded-full border border-[var(--admin-border-strong)] px-4 py-1.5 text-xs font-semibold text-[var(--admin-text-muted)] hover:border-brand hover:text-brand"
       >
         + เพิ่มรายการ
       </button>
 
       <div className="mt-4 ml-auto max-w-xs space-y-1 text-sm">
-        <div className="flex justify-between text-zinc-400">
+        <div className="flex justify-between text-[var(--admin-text-muted)]">
           <span>TOTAL</span>
           <span>{subtotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
         </div>
-        <div className="flex items-center justify-between text-zinc-400">
+        <div className="flex items-center justify-between text-[var(--admin-text-muted)]">
           <span className="flex items-center gap-1">
             VAT
             <input
@@ -160,13 +160,13 @@ export default function ItemsEditor({
               min="0"
               value={vatPercent}
               onChange={(e) => setVatPercent(Number(e.target.value) || 0)}
-              className="w-14 rounded border border-white/15 bg-white/5 px-1 py-0.5 text-xs text-white"
+              className="w-14 rounded border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-1 py-0.5 text-xs text-[var(--admin-text)]"
             />
             %
           </span>
           <span>{vatAmount.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
         </div>
-        <div className="flex justify-between border-t border-white/10 pt-1 font-bold text-white">
+        <div className="flex justify-between border-t border-[var(--admin-border)] pt-1 font-bold text-[var(--admin-text)]">
           <span>GRAND TOTAL</span>
           <span>{grandTotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
         </div>

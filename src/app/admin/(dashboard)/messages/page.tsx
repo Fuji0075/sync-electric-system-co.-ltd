@@ -8,27 +8,27 @@ export default async function AdminMessagesPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-white">ข้อความติดต่อจากเว็บไซต์</h1>
+      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">ข้อความติดต่อจากเว็บไซต์</h1>
 
       <div className="space-y-4">
         {messages.map((m) => (
           <div
             key={m.id}
             className={`rounded-2xl border p-5 ${
-              m.read ? "border-white/10 bg-[#15151b]" : "border-brand/30 bg-brand/5"
+              m.read ? "border-[var(--admin-border)] bg-[var(--admin-surface)]" : "border-brand/30 bg-brand/5"
             }`}
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <span className="font-semibold text-white">{m.name}</span>
-                <span className="ml-2 text-sm text-zinc-500">{m.email}</span>
-                {m.phone && <span className="ml-2 text-sm text-zinc-500">{m.phone}</span>}
+                <span className="font-semibold text-[var(--admin-text)]">{m.name}</span>
+                <span className="ml-2 text-sm text-[var(--admin-text-faint)]">{m.email}</span>
+                {m.phone && <span className="ml-2 text-sm text-[var(--admin-text-faint)]">{m.phone}</span>}
               </div>
-              <time className="text-xs text-zinc-600">
+              <time className="text-xs text-[var(--admin-text-faint2)]">
                 {new Date(m.createdAt).toLocaleString("th-TH")}
               </time>
             </div>
-            <p className="mt-3 whitespace-pre-line text-sm text-zinc-300">{m.message}</p>
+            <p className="mt-3 whitespace-pre-line text-sm text-[var(--admin-text-secondary)]">{m.message}</p>
             <div className="mt-4 flex gap-3 text-sm">
               {!m.read && (
                 <form
@@ -56,7 +56,7 @@ export default async function AdminMessagesPage() {
           </div>
         ))}
         {messages.length === 0 && (
-          <p className="rounded-xl border border-dashed border-white/15 p-10 text-center text-sm text-zinc-500">
+          <p className="rounded-xl border border-dashed border-[var(--admin-border-strong)] p-10 text-center text-sm text-[var(--admin-text-faint)]">
             ยังไม่มีข้อความติดต่อ
           </p>
         )}

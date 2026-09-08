@@ -12,8 +12,8 @@ export default async function AdminProfilePage() {
 
   return (
     <div>
-      <h1 className="mb-2 text-xl font-bold text-white">โปรไฟล์ของฉัน</h1>
-      <p className="mb-6 text-sm text-zinc-500">
+      <h1 className="mb-2 text-xl font-bold text-[var(--admin-text)]">โปรไฟล์ของฉัน</h1>
+      <p className="mb-6 text-sm text-[var(--admin-text-faint)]">
         ข้อมูลนี้จะถูกใช้เป็นชื่อพนักงานขายและลายเซ็นในใบเสนอราคาที่คุณสร้างหรือกดรับเรื่องจากแชทลูกค้าโดยอัตโนมัติ
       </p>
       <ProfileForm

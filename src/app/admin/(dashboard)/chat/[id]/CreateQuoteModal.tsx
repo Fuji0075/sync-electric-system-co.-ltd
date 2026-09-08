@@ -38,7 +38,7 @@ export default function CreateQuoteModal({
         type="button"
         onClick={handleCreate}
         disabled={pending}
-        className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+        className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-[var(--admin-text)] hover:bg-brand-dark disabled:opacity-60"
       >
         {pending ? "กำลังสร้าง..." : "🧾 สร้างใบเสนอราคา"}
       </button>
@@ -51,17 +51,17 @@ export default function CreateQuoteModal({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-[#15151b] shadow-2xl"
+            className="flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-[var(--admin-surface)] shadow-2xl"
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
-              <span className="text-sm font-semibold text-zinc-300">
+            <div className="flex items-center justify-between border-b border-[var(--admin-border)] px-4 py-2">
+              <span className="text-sm font-semibold text-[var(--admin-text-secondary)]">
                 ใบเสนอราคาที่สร้างจากแชทนี้
               </span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="ปิด"
-                className="rounded-full p-1.5 text-zinc-500 hover:bg-white/10"
+                className="rounded-full p-1.5 text-[var(--admin-text-faint)] hover:bg-[var(--admin-surface-softer)]"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
                   <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />

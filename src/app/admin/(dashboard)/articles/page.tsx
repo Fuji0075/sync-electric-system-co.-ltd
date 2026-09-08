@@ -10,18 +10,18 @@ export default async function AdminArticlesPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-white">บทความ</h1>
+        <h1 className="text-xl font-bold text-[var(--admin-text)]">บทความ</h1>
         <Link
           href="/admin/articles/new"
-          className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+          className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-[var(--admin-text)] hover:bg-brand-dark"
         >
           + เพิ่มบทความ
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
+      <div className="overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)]">
         <table className="w-full text-sm">
-          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
+          <thead className="bg-[var(--admin-surface-soft)] text-left text-xs uppercase text-[var(--admin-text-faint)]">
             <tr>
               <th className="px-4 py-3">หัวข้อ</th>
               <th className="px-4 py-3">วันที่เผยแพร่</th>
@@ -29,18 +29,18 @@ export default async function AdminArticlesPage() {
               <th className="px-4 py-3 text-right">จัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-[var(--admin-border)]">
             {articles.map((a) => (
               <tr key={a.id}>
-                <td className="px-4 py-3 font-medium text-white">{a.title}</td>
-                <td className="px-4 py-3 text-zinc-500">
+                <td className="px-4 py-3 font-medium text-[var(--admin-text)]">{a.title}</td>
+                <td className="px-4 py-3 text-[var(--admin-text-faint)]">
                   {new Date(a.publishedAt).toLocaleDateString("th-TH")}
                 </td>
                 <td className="px-4 py-3">
                   {a.published ? (
                     <span className="text-emerald-400">เผยแพร่แล้ว</span>
                   ) : (
-                    <span className="text-zinc-600">ฉบับร่าง</span>
+                    <span className="text-[var(--admin-text-faint2)]">ฉบับร่าง</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -64,7 +64,7 @@ export default async function AdminArticlesPage() {
             ))}
             {articles.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-zinc-600">
+                <td colSpan={4} className="px-4 py-8 text-center text-[var(--admin-text-faint2)]">
                   ยังไม่มีบทความ
                 </td>
               </tr>

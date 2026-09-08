@@ -37,7 +37,7 @@ export default async function ChatLayout({ children }: { children: React.ReactNo
   return (
     <div>
       <AutoRefresh />
-      <div className="flex h-[calc(100vh-140px)] min-h-[520px] overflow-hidden rounded-2xl border border-white/10 bg-[#15151b] shadow-sm">
+      <div className="flex h-[calc(100vh-140px)] min-h-[520px] overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] shadow-sm">
         <ChatSidebar conversations={sidebarData} />
         <main className="flex min-w-0 flex-1 flex-col">{children}</main>
       </div>

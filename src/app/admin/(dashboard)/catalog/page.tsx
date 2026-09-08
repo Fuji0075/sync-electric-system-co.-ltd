@@ -9,69 +9,69 @@ export default async function AdminCatalogPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-white">แค็ตตาล็อก</h1>
+      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">แค็ตตาล็อก</h1>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <form
           action={createCatalogFile}
-          className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#15151b] p-6"
+          className="h-fit space-y-4 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] p-6"
         >
-          <h2 className="font-semibold text-white">เพิ่มไฟล์แค็ตตาล็อก</h2>
+          <h2 className="font-semibold text-[var(--admin-text)]">เพิ่มไฟล์แค็ตตาล็อก</h2>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-300">ชื่อไฟล์ *</label>
+            <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ชื่อไฟล์ *</label>
             <input
               name="title"
               required
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+              className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-300">ลิงก์ไฟล์ (URL) *</label>
+            <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์ไฟล์ (URL) *</label>
             <input
               name="fileUrl"
               required
               placeholder="/catalogs/motor-catalog.pdf"
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+              className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-300">ลิงก์รูปหน้าปก (URL)</label>
+            <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์รูปหน้าปก (URL)</label>
             <input
               name="coverImage"
               placeholder="/catalogs/covers/motor-catalog.jpg"
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+              className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-300">ลำดับ</label>
+            <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลำดับ</label>
             <input
               name="order"
               type="number"
               defaultValue={0}
-              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+              className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             />
           </div>
           <button
             type="submit"
-            className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-white hover:bg-brand-dark"
+            className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-[var(--admin-text)] hover:bg-brand-dark"
           >
             เพิ่มไฟล์
           </button>
         </form>
 
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
-          <ul className="divide-y divide-white/10">
+        <div className="overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)]">
+          <ul className="divide-y divide-[var(--admin-border)]">
             {files.map((f) => (
               <li key={f.id} className="flex items-center justify-between gap-4 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-14 w-10 shrink-0 overflow-hidden rounded bg-white/10">
+                  <div className="h-14 w-10 shrink-0 overflow-hidden rounded bg-[var(--admin-surface-softer)]">
                     {f.coverImage && (
                       // eslint-disable-next-line @next/next/no-img-element -- admin-only thumbnail preview
                       <img src={f.coverImage} alt="" className="h-full w-full object-cover" />
                     )}
                   </div>
                   <div>
-                    <div className="font-medium text-white">{f.title}</div>
+                    <div className="font-medium text-[var(--admin-text)]">{f.title}</div>
                     <a
                       href={f.fileUrl}
                       target="_blank"
@@ -98,7 +98,7 @@ export default async function AdminCatalogPage() {
               </li>
             ))}
             {files.length === 0 && (
-              <li className="p-8 text-center text-sm text-zinc-600">ยังไม่มีไฟล์</li>
+              <li className="p-8 text-center text-sm text-[var(--admin-text-faint2)]">ยังไม่มีไฟล์</li>
             )}
           </ul>
         </div>

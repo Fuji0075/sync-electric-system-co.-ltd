@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { logout } from "../actions";
 import { getCurrentAdminAccess, canAccess, isSuperAdmin, type ModuleKey } from "@/lib/admin-permissions";
 import AdminSidebar from "./AdminSidebar";
+import AdminThemeToggle from "./AdminThemeToggle";
 
 const NAV: { href: string; label: string; icon: string; module?: ModuleKey }[] = [
   { href: "/admin", label: "แดชบอร์ด", icon: "📊" },
@@ -34,7 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     : [];
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0d]">
+    <div className="admin-shell flex min-h-screen bg-[var(--admin-canvas)]" data-theme="dark">
       <AdminSidebar
         nav={visibleNav}
         extraNav={extraNav}
@@ -53,6 +54,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             )}
           </span>
           <div className="flex items-center gap-3">
+            <AdminThemeToggle />
             <Link href="/" target="_blank" className="text-xs text-zinc-400 hover:text-orange-400">
               ดูหน้าเว็บไซต์ ↗
             </Link>

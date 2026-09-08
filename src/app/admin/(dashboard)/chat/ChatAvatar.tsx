@@ -13,13 +13,13 @@ export default function ChatAvatar({
   return (
     <div className="relative shrink-0">
       <div
-        className={`grid place-items-center rounded-full font-bold text-white ${avatarColorClass(name)} ${dims}`}
+        className={`grid place-items-center rounded-full font-bold text-[var(--admin-text)] ${avatarColorClass(name)} ${dims}`}
       >
         {initials(name)}
       </div>
       {online !== undefined && (
         <span
-          className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#15151b] ${
+          className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[var(--admin-surface)] ${
             online ? "bg-emerald-500" : "bg-zinc-500"
           }`}
         />

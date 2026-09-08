@@ -4,7 +4,7 @@ import { deleteQuoteDocument } from "./actions";
 import { requireModuleAccess } from "@/lib/admin-permissions";
 
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
-  draft: { label: "ฉบับร่าง", className: "bg-white/10 text-zinc-400" },
+  draft: { label: "ฉบับร่าง", className: "bg-[var(--admin-surface-softer)] text-[var(--admin-text-muted)]" },
   approved: { label: "อนุมัติแล้ว รอส่ง", className: "bg-amber-100 text-amber-700" },
   sent: { label: "ส่งแล้ว", className: "bg-brand/10 text-emerald-400" },
 };
@@ -18,11 +18,11 @@ export default async function AdminQuotationsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-white">ใบเสนอราคา</h1>
+      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">ใบเสนอราคา</h1>
 
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
+      <div className="overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)]">
         <table className="w-full text-sm">
-          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
+          <thead className="bg-[var(--admin-surface-soft)] text-left text-xs uppercase text-[var(--admin-text-faint)]">
             <tr>
               <th className="px-4 py-3">เลขที่</th>
               <th className="px-4 py-3">ลูกค้า</th>
@@ -32,17 +32,17 @@ export default async function AdminQuotationsPage() {
               <th className="px-4 py-3 text-right">จัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-[var(--admin-border)]">
             {quotes.map((q) => {
               const subtotal = q.items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
               const status = STATUS_LABEL[q.status] ?? STATUS_LABEL.draft;
               return (
                 <tr key={q.id}>
-                  <td className="px-4 py-3 font-medium text-white">{q.quoteNumber}</td>
-                  <td className="px-4 py-3 text-zinc-400">
+                  <td className="px-4 py-3 font-medium text-[var(--admin-text)]">{q.quoteNumber}</td>
+                  <td className="px-4 py-3 text-[var(--admin-text-muted)]">
                     {q.companyName ?? q.attn ?? "-"}
                   </td>
-                  <td className="px-4 py-3 text-zinc-400">
+                  <td className="px-4 py-3 text-[var(--admin-text-muted)]">
                     {subtotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })} บาท
                   </td>
                   <td className="px-4 py-3">
@@ -50,7 +50,7 @@ export default async function AdminQuotationsPage() {
                       {status.label}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-zinc-500">
+                  <td className="px-4 py-3 text-[var(--admin-text-faint)]">
                     {new Date(q.createdAt).toLocaleDateString("th-TH")}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -82,7 +82,7 @@ export default async function AdminQuotationsPage() {
             })}
             {quotes.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-zinc-600">
+                <td colSpan={6} className="px-4 py-10 text-center text-[var(--admin-text-faint2)]">
                   ยังไม่มีใบเสนอราคา — สร้างจากหน้าแชทลูกค้า หรือหน้าคำขอใบเสนอราคาได้
                 </td>
               </tr>

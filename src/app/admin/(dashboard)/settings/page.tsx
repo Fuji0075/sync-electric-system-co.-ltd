@@ -22,7 +22,7 @@ export default async function AdminSettingsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-white">ตั้งค่าเว็บไซต์</h1>
+      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">ตั้งค่าเว็บไซต์</h1>
 
       <div className="mb-4 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800">
         💡 การส่งอีเมลแจ้งใบเสนอราคาไปยัง &ldquo;อีเมลทีมขาย&rdquo; ด้านล่าง ต้องตั้งค่า SMTP
@@ -30,32 +30,32 @@ export default async function AdminSettingsPage() {
         แต่ยังไม่ส่งอีเมลจริง (ดูสถานะได้ที่หน้า &ldquo;ใบเสนอราคา&rdquo;)
       </div>
 
-      <form action={updateSettings} className="max-w-2xl space-y-4 rounded-2xl border border-white/10 bg-[#15151b] p-6">
+      <form action={updateSettings} className="max-w-2xl space-y-4 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] p-6">
         {FIELDS.map((f) =>
           f.textarea ? (
             <div key={f.key}>
-              <label className="mb-1 block text-sm font-medium text-zinc-300">{f.label}</label>
+              <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">{f.label}</label>
               <textarea
                 name={f.key}
                 defaultValue={settings[f.key] ?? ""}
                 rows={2}
-                className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+                className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
               />
             </div>
           ) : (
             <div key={f.key}>
-              <label className="mb-1 block text-sm font-medium text-zinc-300">{f.label}</label>
+              <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">{f.label}</label>
               <input
                 name={f.key}
                 defaultValue={settings[f.key] ?? ""}
-                className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
+                className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
               />
             </div>
           )
         )}
         <button
           type="submit"
-          className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-white hover:bg-brand-dark"
+          className="rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-[var(--admin-text)] hover:bg-brand-dark"
         >
           บันทึกการตั้งค่า
         </button>
