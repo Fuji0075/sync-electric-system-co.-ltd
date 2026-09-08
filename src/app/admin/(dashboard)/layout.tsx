@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logout } from "../actions";
 import { getCurrentAdminAccess, canAccess, isSuperAdmin, type ModuleKey } from "@/lib/admin-permissions";
+import AdminSidebar from "./AdminSidebar";
 
 const NAV: { href: string; label: string; icon: string; module?: ModuleKey }[] = [
   { href: "/admin", label: "แดชบอร์ด", icon: "📊" },
@@ -25,50 +26,21 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const visibleNav = NAV.filter((item) => !item.module || canAccess(admin, item.module));
+  const extraNav = isSuperAdmin(admin)
+    ? [
+        { href: "/admin/users", label: "จัดการผู้ใช้", icon: "👤" },
+        { href: "/admin/logs", label: "ประวัติการทำงาน", icon: "📋" },
+      ]
+    : [];
 
   return (
     <div className="flex min-h-screen bg-neutral-50">
-      <aside className="hidden w-64 shrink-0 border-r border-neutral-200 bg-white md:block">
-        <div className="border-b border-neutral-100 p-4">
-          <span className="flex w-fit flex-col items-center justify-center rounded-md bg-brand px-3 py-1.5 leading-none">
-            <span className="text-lg font-extrabold italic text-white">Sync</span>
-            <span className="text-[8px] font-semibold text-white/95 -mt-0.5">
-              Electric System
-            </span>
-          </span>
-          <p className="mt-2 text-xs text-neutral-400">Admin Console</p>
-        </div>
-        <nav className="flex flex-col gap-1 p-3">
-          {visibleNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
-            >
-              <span>{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-          {isSuperAdmin(admin) && (
-            <>
-              <Link
-                href="/admin/users"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
-              >
-                <span>👤</span>
-                จัดการผู้ใช้
-              </Link>
-              <Link
-                href="/admin/logs"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-brand/10 hover:text-brand-dark"
-              >
-                <span>📋</span>
-                ประวัติการทำงาน
-              </Link>
-            </>
-          )}
-        </nav>
-      </aside>
+      <AdminSidebar
+        nav={visibleNav}
+        extraNav={extraNav}
+        adminName={admin.name}
+        roleLabel={isSuperAdmin(admin) ? "Super Admin" : "Admin"}
+      />
 
       <div className="flex-1">
         <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
