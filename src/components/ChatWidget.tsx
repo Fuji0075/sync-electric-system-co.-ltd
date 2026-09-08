@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { parseChatMessage } from "@/lib/chat-message";
+import { linkify } from "@/lib/linkify";
 
 type ChatMessage = {
   id: string;
@@ -122,7 +123,7 @@ export default function ChatWidget() {
                         {SENDER_LABEL[m.sender]}
                       </p>
                     )}
-                    {text}
+                    {linkify(text, "underline")}
                     {quoteButtons.length > 0 && (
                       <div className="mt-2 flex flex-col gap-1.5">
                         {quoteButtons.map((b) => (

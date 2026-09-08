@@ -3,13 +3,22 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { generateQuoteNumber } from "@/lib/quote-number";
 import { sendMail } from "@/lib/mail";
 import { getSiteSettings } from "@/lib/settings";
 import { getSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity-log";
 import { pushLineMessage } from "@/lib/line";
+import { generateQuotePdfBuffer } from "@/lib/quote-pdf";
 import type { QuoteDocument, QuoteItem } from "@/generated/prisma/client";
+
+async function getBaseUrl() {
+  const h = await headers();
+  const host = h.get("host") ?? "localhost:3000";
+  const isLocal = host.startsWith("localhost") || host.startsWith("127.0.0.1");
+  return `${isLocal ? "http" : "https"}://${host}`;
+}
 
 async function getCurrentAdmin() {
   const session = await getSession();
@@ -217,17 +226,19 @@ function buildQuoteText(
 export async function sendQuoteToCustomer(id: string) {
   const quote = await prisma.quoteDocument.findUnique({
     where: { id },
-    include: { items: { orderBy: { order: "asc" } } },
+    include: { items: { orderBy: { order: "asc" } }, assignedAdmin: true },
   });
   if (!quote || !quote.email) return { ok: false, error: "ไม่มีอีเมลลูกค้าสำหรับส่ง" };
 
   const settings = await getSiteSettings();
   const text = buildQuoteText(quote, settings);
+  const pdf = await generateQuotePdfBuffer(quote, settings);
 
   const { sent } = await sendMail({
     to: quote.email,
     subject: `ใบเสนอราคา ${quote.quoteNumber} — ${settings.company_name_th}`,
     text,
+    attachments: [{ filename: `${quote.quoteNumber}.pdf`, content: pdf, contentType: "application/pdf" }],
   });
 
   await prisma.quoteDocument.update({
@@ -255,10 +266,7 @@ export async function sendQuoteToCustomer(id: string) {
  * into the same thread the sales rep already has with the customer.
  */
 export async function sendQuoteInChat(id: string) {
-  const quote = await prisma.quoteDocument.findUnique({
-    where: { id },
-    include: { items: { orderBy: { order: "asc" } } },
-  });
+  const quote = await prisma.quoteDocument.findUnique({ where: { id } });
   if (!quote) return { ok: false, error: "ไม่พบใบเสนอราคานี้" };
   if (!quote.conversationId) {
     return { ok: false, error: "ใบเสนอราคานี้ไม่ได้มาจากแชท กรุณาส่งทางอีเมลแทน" };
@@ -267,8 +275,9 @@ export async function sendQuoteInChat(id: string) {
   const conversation = await prisma.conversation.findUnique({ where: { id: quote.conversationId } });
   if (!conversation) return { ok: false, error: "ไม่พบการสนทนาที่ผูกกับใบเสนอราคานี้" };
 
-  const settings = await getSiteSettings();
-  const text = buildQuoteText(quote, settings);
+  const baseUrl = await getBaseUrl();
+  const pdfUrl = `${baseUrl}/api/quotations/${id}/pdf`;
+  const text = `ใบเสนอราคา ${quote.quoteNumber} พร้อมแล้วค่ะ ดาวน์โหลดไฟล์ PDF ได้ที่ลิงก์นี้เลยค่ะ\n${pdfUrl}`;
 
   await prisma.message.create({
     data: { conversationId: conversation.id, sender: "admin", body: text },

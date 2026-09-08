@@ -6,6 +6,7 @@ type SendMailInput = {
   text: string;
   html?: string;
   replyTo?: string;
+  attachments?: { filename: string; content: Buffer; contentType?: string }[];
 };
 
 function getTransport() {
@@ -45,6 +46,7 @@ export async function sendMail(input: SendMailInput): Promise<{ sent: boolean }>
     text: input.text,
     html: input.html,
     replyTo: input.replyTo,
+    attachments: input.attachments,
   });
 
   return { sent: true };

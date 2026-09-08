@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { sendAdminReply, closeConversation } from "../actions";
 import { createQuoteFromConversation } from "../../quotations/actions";
 import { parseChatMessage } from "@/lib/chat-message";
+import { linkify } from "@/lib/linkify";
 import ChatAvatar from "../ChatAvatar";
 import CreateQuoteModal from "./CreateQuoteModal";
 
@@ -88,7 +89,7 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
                         : "rounded-br-md bg-neutral-200 text-neutral-700"
                   }`}
                 >
-                  {text}
+                  {linkify(text, isVisitor ? "text-brand-dark underline" : "text-white underline")}
                 </div>
                 <span className="mt-1 px-1 text-[10px] text-neutral-400">
                   {SENDER_LABEL[m.sender] ?? m.sender} · {formatTime(m.createdAt)}
