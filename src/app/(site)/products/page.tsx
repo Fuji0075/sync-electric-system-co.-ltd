@@ -31,8 +31,9 @@ export default async function ProductsPage({
   const { category, q, brand } = await searchParams;
   const selectedBrands = brand ? brand.split(",").filter(Boolean) : [];
 
-  const [categories, allProducts, settings] = await Promise.all([
+  const [categories, groups, allProducts, settings] = await Promise.all([
     prisma.category.findMany({ orderBy: { order: "asc" } }),
+    prisma.categoryGroup.findMany({ orderBy: { order: "asc" } }),
     prisma.product.findMany({ include: { category: true } }),
     getSiteSettings(),
   ]);
@@ -44,6 +45,16 @@ export default async function ProductsPage({
     if (p.brand) brandCounts.set(p.brand, (brandCounts.get(p.brand) ?? 0) + 1);
   }
   const brandList = [...brandCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+
+  const groupedCategories = groups
+    .map((g) => ({
+      group: g,
+      categories: categories.filter((c) => c.groupId === g.id),
+    }))
+    .filter((g) => g.categories.length > 0);
+  const ungroupedCategories = categories.filter((c) => !c.groupId);
+  const groupTotal = (cats: typeof categories) =>
+    cats.reduce((sum, c) => sum + (categoryCounts.get(c.id) ?? 0), 0);
 
   const products = allProducts.filter((p) => {
     if (category && p.category.slug !== category) return false;
@@ -87,40 +98,76 @@ export default async function ProductsPage({
       </div>
 
       <div className="flex flex-col gap-8 md:flex-row">
-        <aside className="shrink-0 md:w-60">
+        <aside className="shrink-0 md:w-64">
           <h2 className="mb-3 text-sm font-bold text-neutral-900">หมวดหมู่สินค้า</h2>
-          <ul className="flex flex-col gap-1 text-sm">
-            <li>
+
+          <Link
+            href={buildHref({ q, brands: selectedBrands })}
+            className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${
+              !category ? "bg-brand/10 font-bold text-brand-dark" : "text-neutral-700 hover:bg-neutral-100"
+            }`}
+          >
+            <span>สินค้าทั้งหมด</span>
+            <span className={!category ? "text-brand-dark" : "text-neutral-400"}>{allProducts.length}</span>
+          </Link>
+
+          <div className="mt-1 flex flex-col gap-0.5">
+            {groupedCategories.map(({ group, categories: cats }) => (
+              <details key={group.id} className="group" open={cats.some((c) => c.slug === category)}>
+                <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+                  <span className="flex items-center gap-1.5">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      className="h-3 w-3 shrink-0 text-neutral-400 transition-transform group-open:rotate-180"
+                    >
+                      <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {group.name}
+                  </span>
+                  <span className="text-neutral-400">{groupTotal(cats)}</span>
+                </summary>
+                <ul className="ml-4 mt-0.5 flex flex-col gap-0.5 border-l border-neutral-200 pl-3">
+                  {cats.map((c) => (
+                    <li key={c.id}>
+                      <Link
+                        href={buildHref({ category: c.slug, q, brands: selectedBrands })}
+                        className={`flex items-center justify-between rounded-md px-3 py-1.5 text-sm ${
+                          category === c.slug
+                            ? "bg-brand text-white font-semibold"
+                            : "text-neutral-600 hover:bg-neutral-100"
+                        }`}
+                      >
+                        <span>{c.name}</span>
+                        <span className={category === c.slug ? "text-white/80" : "text-neutral-400"}>
+                          {categoryCounts.get(c.id) ?? 0}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))}
+
+            {ungroupedCategories.map((c) => (
               <Link
-                href={buildHref({ q, brands: selectedBrands })}
-                className={`flex items-center justify-between rounded-md px-3 py-2 ${
-                  !category
+                key={c.id}
+                href={buildHref({ category: c.slug, q, brands: selectedBrands })}
+                className={`flex items-center justify-between rounded-md px-3 py-2 text-sm ${
+                  category === c.slug
                     ? "bg-brand text-white font-semibold"
                     : "text-neutral-600 hover:bg-neutral-100"
                 }`}
               >
-                <span>ทั้งหมด</span>
-                <span className={!category ? "text-white/80" : "text-neutral-400"}>{allProducts.length}</span>
+                <span>{c.name}</span>
+                <span className={category === c.slug ? "text-white/80" : "text-neutral-400"}>
+                  {categoryCounts.get(c.id) ?? 0}
+                </span>
               </Link>
-            </li>
-            {categories.map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={buildHref({ category: c.slug, q, brands: selectedBrands })}
-                  className={`flex items-center justify-between rounded-md px-3 py-2 ${
-                    category === c.slug
-                      ? "bg-brand text-white font-semibold"
-                      : "text-neutral-600 hover:bg-neutral-100"
-                  }`}
-                >
-                  <span>{c.name}</span>
-                  <span className={category === c.slug ? "text-white/80" : "text-neutral-400"}>
-                    {categoryCounts.get(c.id) ?? 0}
-                  </span>
-                </Link>
-              </li>
             ))}
-          </ul>
+          </div>
 
           {brandList.length > 0 && (
             <>

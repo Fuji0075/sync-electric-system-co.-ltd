@@ -9,13 +9,19 @@ const adapter = new PrismaBetterSqlite3({
 });
 const prisma = new PrismaClient({ adapter });
 
+const categoryGroups = [
+  { name: "มอเตอร์และเกียร์", slug: "motors-gears", order: 0 },
+  { name: "ระบบควบคุมและอุปกรณ์", slug: "control-accessories", order: 1 },
+  { name: "ปั๊มน้ำ", slug: "pumps", order: 2 },
+];
+
 const categories = [
-  { name: "มอเตอร์ไฟฟ้า (Induction Motor)", slug: "induction-motor" },
-  { name: "มอเตอร์เกียร์ (Gear Motor)", slug: "gear-motor" },
-  { name: "อินเวอร์เตอร์ (Inverter)", slug: "inverter" },
-  { name: "เบรก (Brake)", slug: "brake" },
-  { name: "ปั๊มน้ำ (Water Pump)", slug: "water-pump" },
-  { name: "ตัวต้านทาน (Resistor)", slug: "resistor" },
+  { name: "มอเตอร์ไฟฟ้า (Induction Motor)", slug: "induction-motor", groupSlug: "motors-gears" },
+  { name: "มอเตอร์เกียร์ (Gear Motor)", slug: "gear-motor", groupSlug: "motors-gears" },
+  { name: "อินเวอร์เตอร์ (Inverter)", slug: "inverter", groupSlug: "control-accessories" },
+  { name: "เบรก (Brake)", slug: "brake", groupSlug: "control-accessories" },
+  { name: "ปั๊มน้ำ (Water Pump)", slug: "water-pump", groupSlug: "pumps" },
+  { name: "ตัวต้านทาน (Resistor)", slug: "resistor", groupSlug: "control-accessories" },
 ];
 
 const productsByCategory: Record<
@@ -107,12 +113,24 @@ async function main() {
     },
   });
 
+  // Category groups
+  const groupsBySlug = new Map<string, string>();
+  for (const g of categoryGroups) {
+    const group = await prisma.categoryGroup.upsert({
+      where: { slug: g.slug },
+      update: { name: g.name, order: g.order },
+      create: { name: g.name, slug: g.slug, order: g.order },
+    });
+    groupsBySlug.set(g.slug, group.id);
+  }
+
   // Categories + products
   for (const cat of categories) {
+    const groupId = groupsBySlug.get(cat.groupSlug) ?? null;
     const category = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name },
-      create: { name: cat.name, slug: cat.slug },
+      update: { name: cat.name, groupId },
+      create: { name: cat.name, slug: cat.slug, groupId },
     });
 
     const products = productsByCategory[cat.slug] ?? [];

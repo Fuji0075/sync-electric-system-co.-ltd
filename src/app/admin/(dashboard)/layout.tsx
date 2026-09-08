@@ -8,6 +8,7 @@ import AdminThemeToggle from "./AdminThemeToggle";
 const NAV: { href: string; label: string; icon: string; module?: ModuleKey }[] = [
   { href: "/admin", label: "แดชบอร์ด", icon: "📊" },
   { href: "/admin/banners", label: "แบนเนอร์หน้าแรก", icon: "🖼️", module: "banners" },
+  { href: "/admin/category-groups", label: "หมวดหมู่หลัก", icon: "🗃️", module: "categories" },
   { href: "/admin/categories", label: "หมวดหมู่สินค้า", icon: "🗂️", module: "categories" },
   { href: "/admin/products", label: "สินค้า", icon: "⚙️", module: "products" },
   { href: "/admin/articles", label: "บทความ", icon: "📰", module: "articles" },

@@ -1,9 +1,10 @@
 type CategoryFormProps = {
   action: (formData: FormData) => void;
-  defaultValues?: { name: string; slug: string; order: number };
+  groups: { id: string; name: string }[];
+  defaultValues?: { name: string; slug: string; order: number; groupId: string | null };
 };
 
-export default function CategoryForm({ action, defaultValues }: CategoryFormProps) {
+export default function CategoryForm({ action, groups, defaultValues }: CategoryFormProps) {
   return (
     <form action={action} className="max-w-lg space-y-4 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-surface)] p-6">
       <div>
@@ -14,6 +15,21 @@ export default function CategoryForm({ action, defaultValues }: CategoryFormProp
           defaultValue={defaultValues?.name}
           className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
         />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">หมวดหมู่หลัก</label>
+        <select
+          name="groupId"
+          defaultValue={defaultValues?.groupId ?? ""}
+          className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none focus:border-brand"
+        >
+          <option value="">ไม่จัดกลุ่ม</option>
+          {groups.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">

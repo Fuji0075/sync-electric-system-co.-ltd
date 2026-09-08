@@ -37,14 +37,26 @@ model ActivityLog {
   createdAt   DateTime   @default(now())
 }
 
+model CategoryGroup {
+  id         String     @id @default(cuid())
+  name       String
+  slug       String     @unique
+  order      Int        @default(0)
+  categories Category[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
 model Category {
-  id        String    @id @default(cuid())
+  id        String         @id @default(cuid())
   name      String
-  slug      String    @unique
-  order     Int       @default(0)
+  slug      String         @unique
+  order     Int            @default(0)
+  groupId   String?
+  group     CategoryGroup? @relation(fields: [groupId], references: [id], onDelete: SetNull)
   products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 }
 
 model Product {
@@ -131,21 +143,21 @@ model Customer {
 }
 
 model Conversation {
-  id             String    @id @default(cuid())
-  visitorId      String    @unique
-  customerId     String?
-  customer       Customer? @relation(fields: [customerId], references: [id])
-  visitorName    String?
-  visitorEmail   String?
-  visitorPhone   String?
-  needsAttention Boolean   @default(false)
-  unreadByVisitor Boolean  @default(false)
-  status         String    @default("open")
-  channel        String    @default("web") // "web" | "line"
-  lineUserId     String?   @unique
-  messages       Message[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  visitorId       String    @unique
+  customerId      String?
+  customer        Customer? @relation(fields: [customerId], references: [id])
+  visitorName     String?
+  visitorEmail    String?
+  visitorPhone    String?
+  needsAttention  Boolean   @default(false)
+  unreadByVisitor Boolean   @default(false)
+  status          String    @default("open")
+  channel         String    @default("web") // "web" | "line"
+  lineUserId      String?   @unique
+  messages        Message[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Message {
@@ -175,30 +187,30 @@ model QuoteRequest {
 }
 
 model QuoteDocument {
-  id             String      @id @default(cuid())
-  quoteNumber    String      @unique
-  status         String      @default("draft") // draft | approved | sent
-  conversationId String?
-  quoteRequestId String?
+  id              String      @id @default(cuid())
+  quoteNumber     String      @unique
+  status          String      @default("draft") // draft | approved | sent
+  conversationId  String?
+  quoteRequestId  String?
   assignedAdminId String?
-  assignedAdmin  AdminUser?  @relation(fields: [assignedAdminId], references: [id])
-  issueDate      DateTime    @default(now())
-  companyName    String?
-  attn           String?
-  tel            String?
-  fax            String?
-  email          String?
-  creditTerm     String      @default("0")
-  deliveryDays   String      @default("")
-  validityDays   Int         @default(20)
-  vatPercent     Float       @default(7)
-  salesName      String?
-  salesPhone     String?
-  notes          String?
-  items          QuoteItem[]
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  sentAt         DateTime?
+  assignedAdmin   AdminUser?  @relation(fields: [assignedAdminId], references: [id])
+  issueDate       DateTime    @default(now())
+  companyName     String?
+  attn            String?
+  tel             String?
+  fax             String?
+  email           String?
+  creditTerm      String      @default("0")
+  deliveryDays    String      @default("")
+  validityDays    Int         @default(20)
+  vatPercent      Float       @default(7)
+  salesName       String?
+  salesPhone      String?
+  notes           String?
+  items           QuoteItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  sentAt          DateTime?
 }
 
 model QuoteItem {
