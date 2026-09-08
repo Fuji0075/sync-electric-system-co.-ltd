@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductForm from "../../ProductForm";
@@ -19,7 +20,17 @@ export default async function EditProductPage({ params }: { params: Params }) {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-[var(--admin-text)]">แก้ไขสินค้า</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-[var(--admin-text)]">แก้ไขสินค้า</h1>
+        {product.series && (
+          <Link
+            href={`/admin/products/new?series=${encodeURIComponent(product.series)}&categoryId=${product.categoryId}`}
+            className="rounded-full border border-[var(--admin-border-strong)] px-4 py-2 text-xs font-semibold text-[var(--admin-text-secondary)] hover:border-brand hover:text-brand"
+          >
+            + เพิ่มรุ่น/แบรนด์อื่นในซีรีส์ &ldquo;{product.series}&rdquo;
+          </Link>
+        )}
+      </div>
       <ProductForm action={action} categories={categories} defaultValues={product} />
     </div>
   );

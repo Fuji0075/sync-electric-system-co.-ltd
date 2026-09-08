@@ -26,7 +26,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
   if (!product) notFound();
 
-  const [related, settings, brandRows] = await Promise.all([
+  const [related, settings, brandRows, variants] = await Promise.all([
     prisma.product.findMany({
       where: { categoryId: product.categoryId, NOT: { id: product.id } },
       include: { category: true },
@@ -38,6 +38,12 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       select: { brand: true },
       distinct: ["brand"],
     }),
+    product.series
+      ? prisma.product.findMany({
+          where: { series: product.series, NOT: { id: product.id } },
+          orderBy: { brand: "asc" },
+        })
+      : Promise.resolve([]),
   ]);
 
   const specs = parseSpecs(product.specs);
@@ -174,6 +180,34 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         <h2 className="mb-3 text-sm font-bold text-neutral-900">รายละเอียดสินค้า</h2>
         <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-600">{product.description}</p>
       </div>
+
+      {variants.length > 0 && (
+        <div className="mt-16">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold text-neutral-900">
+            <span className="text-brand-dark">☰</span> รุ่นที่มีจำหน่าย
+          </h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {variants.map((v) => (
+              <Link
+                key={v.id}
+                href={`/products/${v.slug}`}
+                className="group overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 text-center shadow-sm transition hover:-translate-y-1 hover:border-brand hover:shadow-lg"
+              >
+                <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-neutral-50">
+                  {v.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- admin-supplied product image, arbitrary local/external URL
+                    <img src={v.imageUrl} alt={v.brand ?? v.name} className="h-full w-full object-contain p-3" />
+                  ) : (
+                    <span className="text-4xl">{categoryIcon(product.category.slug)}</span>
+                  )}
+                </div>
+                <p className="mt-3 text-sm font-extrabold uppercase text-neutral-900">{v.brand ?? v.name}</p>
+                <p className="mt-1 line-clamp-2 text-xs text-neutral-500">{v.summary}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {(specs.length > 0 || highlights.length > 0) && (
         <div className="mt-16 grid gap-8 lg:grid-cols-2">
