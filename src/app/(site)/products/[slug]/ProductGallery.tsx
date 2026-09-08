@@ -20,35 +20,42 @@ export default function ProductGallery({
 
   return (
     <div>
-      <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-brand/10 to-accent/5">
-        {hasImages ? (
-          // eslint-disable-next-line @next/next/no-img-element -- admin-supplied product image, arbitrary local/external URL
-          <img src={images[active]} alt={productName} className="h-full w-full object-contain p-6" />
-        ) : (
-          <>
-            <div
-              className="absolute inset-0 opacity-40"
-              style={{
-                backgroundImage: "radial-gradient(circle, #0f6b2e 1.5px, transparent 1.5px)",
-                backgroundSize: "24px 24px",
-              }}
-            />
-            <span className="relative grid h-40 w-40 place-items-center rounded-[2rem] bg-white text-8xl shadow-lg sm:h-48 sm:w-48">
-              {fallbackIcon}
+      {seriesTag && (
+        <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs font-bold text-neutral-700 shadow-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          {seriesTag}
+        </span>
+      )}
+
+      {hasImages ? (
+        <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+          {/* eslint-disable-next-line @next/next/no-img-element -- admin-supplied product image, arbitrary local/external URL */}
+          <img src={images[active]} alt={productName} className="h-full w-full object-contain p-8" />
+          {inStock && (
+            <span className="absolute right-5 top-5 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white shadow-sm">
+              พร้อมส่ง
             </span>
-          </>
-        )}
-        {seriesTag && (
-          <span className="absolute left-5 top-5 rounded-full bg-neutral-900/80 px-3 py-1 text-xs font-bold text-white shadow-sm">
-            {seriesTag}
+          )}
+        </div>
+      ) : (
+        <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand/10 to-accent/5">
+          <div
+            className="absolute inset-0 opacity-40"
+            style={{
+              backgroundImage: "radial-gradient(circle, #0f6b2e 1.5px, transparent 1.5px)",
+              backgroundSize: "24px 24px",
+            }}
+          />
+          <span className="relative grid h-40 w-40 place-items-center rounded-[2rem] bg-white text-8xl shadow-lg sm:h-48 sm:w-48">
+            {fallbackIcon}
           </span>
-        )}
-        {inStock && (
-          <span className="absolute right-5 top-5 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white shadow-sm">
-            พร้อมส่ง
-          </span>
-        )}
-      </div>
+          {inStock && (
+            <span className="absolute right-5 top-5 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white shadow-sm">
+              พร้อมส่ง
+            </span>
+          )}
+        </div>
+      )}
 
       {images.length > 1 && (
         <div className="mt-3 flex gap-2 overflow-x-auto">
