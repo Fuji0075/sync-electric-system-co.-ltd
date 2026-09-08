@@ -26,17 +26,16 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
   if (!product) notFound();
 
-  const [related, settings, brandRows] = await Promise.all([
+  const [related, settings, brands] = await Promise.all([
     prisma.product.findMany({
       where: { categoryId: product.categoryId, NOT: { id: product.id } },
       include: { category: true },
       take: 4,
     }),
     getSiteSettings(),
-    prisma.product.findMany({
-      where: { brand: { not: null } },
-      select: { brand: true },
-      distinct: ["brand"],
+    prisma.brand.findMany({
+      where: { active: true },
+      orderBy: [{ order: "asc" }, { name: "asc" }],
     }),
   ]);
 
@@ -45,7 +44,6 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   const gallery = [product.imageUrl, ...parseStringList(product.galleryImages)].filter(
     (url): url is string => Boolean(url)
   );
-  const brands = brandRows.map((b) => b.brand).filter((b): b is string => Boolean(b));
   const highlightSpecs = specs.slice(0, 2);
 
   return (
@@ -79,6 +77,10 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
         <div>
           <h1 className="text-2xl font-extrabold text-neutral-900 sm:text-3xl">{product.name}</h1>
+          <div className="mt-4">
+            <h2 className="mb-2 text-sm font-bold text-neutral-900">รายละเอียดสินค้า</h2>
+            <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-600">{product.description}</p>
+          </div>
           <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-sm text-neutral-500">
             <span>{product.category.name}</span>
             {product.series && (
@@ -170,10 +172,40 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
       </div>
 
-      <div className="mt-16 max-w-3xl">
-        <h2 className="mb-3 text-sm font-bold text-neutral-900">รายละเอียดสินค้า</h2>
-        <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-600">{product.description}</p>
-      </div>
+      {brands.length > 0 && (
+        <section className="mt-10">
+          <div className="mb-5 flex items-center gap-2 text-sm font-bold text-neutral-900">
+            <span className="text-orange-600">▣</span>
+            <h2>รุ่นที่มีจำหน่าย</h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {brands.map((brand) => (
+              <Link
+                key={brand.id}
+                href={`/products?brand=${encodeURIComponent(brand.name)}`}
+                className="group overflow-hidden rounded-xl border border-neutral-200 bg-white transition hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
+              >
+                <div className="flex h-32 items-center justify-center bg-white p-4">
+                  {brand.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- admin-supplied brand image
+                    <img
+                      src={brand.imageUrl}
+                      alt={brand.name}
+                      className="h-full w-full object-contain transition group-hover:scale-105"
+                    />
+                  ) : (
+                    <span className="text-2xl font-extrabold text-neutral-500">{brand.name}</span>
+                  )}
+                </div>
+                <div className="border-t border-neutral-100 px-4 py-3 text-center">
+                  <h3 className="text-sm font-extrabold text-neutral-700">{brand.name}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-neutral-500">{brand.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {(specs.length > 0 || highlights.length > 0) && (
         <div className="mt-16 grid gap-8 lg:grid-cols-2">
@@ -231,21 +263,6 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
       )}
 
-      {brands.length > 0 && (
-        <div className="mt-16 rounded-2xl bg-neutral-50 py-8 text-center">
-          <p className="mb-4 text-xs font-semibold text-neutral-500">แบรนด์ที่เราเป็นตัวแทนจำหน่าย</p>
-          <div className="flex flex-wrap items-center justify-center gap-2.5 px-4">
-            {brands.map((b) => (
-              <span
-                key={b}
-                className="rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-xs font-bold text-neutral-600"
-              >
-                {b}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
