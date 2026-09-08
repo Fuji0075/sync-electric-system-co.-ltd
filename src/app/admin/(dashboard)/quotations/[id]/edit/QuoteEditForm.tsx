@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import { updateQuoteDocument, sendQuoteToCustomer, claimQuote } from "../../actions";
+import { updateQuoteDocument, sendQuoteToCustomer, sendQuoteInChat, claimQuote } from "../../actions";
 import ItemsEditor from "./ItemsEditor";
 import QuotePreviewModal from "./QuotePreviewModal";
 
@@ -27,9 +27,14 @@ export default async function QuoteEditForm({
   if (!quote) notFound();
 
   const action = updateQuoteDocument.bind(null, id);
+  const sendViaChat = Boolean(quote.conversationId);
   async function sendAction() {
     "use server";
-    await sendQuoteToCustomer(id);
+    if (sendViaChat) {
+      await sendQuoteInChat(id);
+    } else {
+      await sendQuoteToCustomer(id);
+    }
   }
   async function claimAction() {
     "use server";
@@ -225,14 +230,23 @@ export default async function QuoteEditForm({
 
       <form action={sendAction} className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-5">
         <p className="mb-3 text-sm text-amber-800">
-          เมื่อตรวจสอบข้อมูลและราคาเรียบร้อยแล้ว กดปุ่มนี้เพื่อส่งอีเมลใบเสนอราคาไปยังลูกค้า
-          (ต้องบันทึกฉบับร่างด้านบนก่อน และต้องตั้งค่า SMTP ในระบบแล้ว)
+          {sendViaChat ? (
+            <>
+              เมื่อตรวจสอบข้อมูลและราคาเรียบร้อยแล้ว กดปุ่มนี้เพื่อส่งใบเสนอราคาเป็นข้อความในแชทที่คุยกับลูกค้าอยู่
+              (ต้องบันทึกฉบับร่างด้านบนก่อน — ถ้าลูกค้าทักมาจาก LINE จะส่งไปที่ LINE ให้อัตโนมัติ)
+            </>
+          ) : (
+            <>
+              ใบเสนอราคานี้ไม่ได้มาจากแชท จึงส่งทางอีเมลแทน เมื่อตรวจสอบข้อมูลและราคาเรียบร้อยแล้ว กดปุ่มนี้เพื่อส่งอีเมลใบเสนอราคาไปยังลูกค้า
+              (ต้องบันทึกฉบับร่างด้านบนก่อน และต้องตั้งค่า SMTP ในระบบแล้ว)
+            </>
+          )}
         </p>
         <button
           type="submit"
           className="rounded-full bg-amber-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-amber-700"
         >
-          ✅ อนุมัติและส่งอีเมลให้ลูกค้า
+          {sendViaChat ? "✅ อนุมัติและส่งในแชท" : "✅ อนุมัติและส่งอีเมลให้ลูกค้า"}
         </button>
       </form>
     </div>

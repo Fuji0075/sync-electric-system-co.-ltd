@@ -8,6 +8,8 @@ import { sendMail } from "@/lib/mail";
 import { getSiteSettings } from "@/lib/settings";
 import { getSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity-log";
+import { pushLineMessage } from "@/lib/line";
+import type { QuoteDocument, QuoteItem } from "@/generated/prisma/client";
 
 async function getCurrentAdmin() {
   const session = await getSession();
@@ -174,17 +176,13 @@ function formatCurrency(n: number) {
   return n.toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export async function sendQuoteToCustomer(id: string) {
-  const quote = await prisma.quoteDocument.findUnique({
-    where: { id },
-    include: { items: { orderBy: { order: "asc" } } },
-  });
-  if (!quote || !quote.email) return { ok: false, error: "ไม่มีอีเมลลูกค้าสำหรับส่ง" };
-
+function buildQuoteText(
+  quote: QuoteDocument & { items: QuoteItem[] },
+  settings: Awaited<ReturnType<typeof getSiteSettings>>
+) {
   const subtotal = quote.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
   const vatAmount = (subtotal * quote.vatPercent) / 100;
   const grandTotal = subtotal + vatAmount;
-  const settings = await getSiteSettings();
 
   const lines = quote.items.map(
     (item, i) =>
@@ -193,7 +191,7 @@ export async function sendQuoteToCustomer(id: string) {
       )} = ${formatCurrency(item.quantity * item.unitPrice)} บาท`
   );
 
-  const text = [
+  return [
     `Quotation No: ${quote.quoteNumber}`,
     `Date: ${quote.issueDate.toLocaleDateString("th-TH")}`,
     ``,
@@ -214,6 +212,17 @@ export async function sendQuoteToCustomer(id: string) {
     settings.company_name_th,
     `โทร: ${settings.phone}`,
   ].join("\n");
+}
+
+export async function sendQuoteToCustomer(id: string) {
+  const quote = await prisma.quoteDocument.findUnique({
+    where: { id },
+    include: { items: { orderBy: { order: "asc" } } },
+  });
+  if (!quote || !quote.email) return { ok: false, error: "ไม่มีอีเมลลูกค้าสำหรับส่ง" };
+
+  const settings = await getSiteSettings();
+  const text = buildQuoteText(quote, settings);
 
   const { sent } = await sendMail({
     to: quote.email,
@@ -238,6 +247,63 @@ export async function sendQuoteToCustomer(id: string) {
   revalidatePath("/admin/quotations");
 
   return { ok: true, emailSent: sent };
+}
+
+/**
+ * Sends the quotation as a chat message instead of an email — for quotes
+ * created from a conversation (web chat or LINE), this delivers straight
+ * into the same thread the sales rep already has with the customer.
+ */
+export async function sendQuoteInChat(id: string) {
+  const quote = await prisma.quoteDocument.findUnique({
+    where: { id },
+    include: { items: { orderBy: { order: "asc" } } },
+  });
+  if (!quote) return { ok: false, error: "ไม่พบใบเสนอราคานี้" };
+  if (!quote.conversationId) {
+    return { ok: false, error: "ใบเสนอราคานี้ไม่ได้มาจากแชท กรุณาส่งทางอีเมลแทน" };
+  }
+
+  const conversation = await prisma.conversation.findUnique({ where: { id: quote.conversationId } });
+  if (!conversation) return { ok: false, error: "ไม่พบการสนทนาที่ผูกกับใบเสนอราคานี้" };
+
+  const settings = await getSiteSettings();
+  const text = buildQuoteText(quote, settings);
+
+  await prisma.message.create({
+    data: { conversationId: conversation.id, sender: "admin", body: text },
+  });
+
+  await prisma.conversation.update({
+    where: { id: conversation.id },
+    data: { needsAttention: false, unreadByVisitor: true },
+  });
+
+  let lineSent = true;
+  if (conversation.channel === "line" && conversation.lineUserId) {
+    const result = await pushLineMessage(conversation.lineUserId, text);
+    lineSent = result.sent;
+  }
+
+  await prisma.quoteDocument.update({
+    where: { id },
+    data: { status: "sent", sentAt: new Date() },
+  });
+
+  await logActivity({
+    action: "send_quote",
+    description: `ส่งใบเสนอราคา ${quote.quoteNumber} ทางแชท`,
+    targetType: "quote",
+    targetId: id,
+  });
+
+  revalidatePath(`/admin/quotations/${id}/print`);
+  revalidatePath(`/admin/quotations/${id}/edit`);
+  revalidatePath("/admin/quotations");
+  revalidatePath(`/admin/chat/${conversation.id}`);
+  revalidatePath("/admin/chat");
+
+  return { ok: true, lineSent };
 }
 
 export async function approveQuote(id: string) {
