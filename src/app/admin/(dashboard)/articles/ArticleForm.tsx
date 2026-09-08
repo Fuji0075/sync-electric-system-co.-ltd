@@ -1,3 +1,5 @@
+import ImageUploadField from "@/components/admin/ImageUploadField";
+
 type ArticleFormProps = {
   action: (formData: FormData) => void;
   defaultValues?: {
@@ -44,6 +46,12 @@ export default function ArticleForm({ action, defaultValues, showSlug }: Article
           className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
         />
       </div>
+      <ImageUploadField
+        name="coverImage"
+        label="รูปหน้าปกบทความ"
+        defaultValue={defaultValues?.coverImage ?? ""}
+        placeholder="/articles/cover.jpg หรือเลือกไฟล์จากเครื่อง"
+      />
       <div>
         <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">เนื้อหา *</label>
         <textarea

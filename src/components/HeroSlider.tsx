@@ -25,7 +25,7 @@ export default function HeroSlider({ slides }: { slides: SlideData[] }) {
   if (slides.length === 0) return null;
 
   return (
-    <div className="relative h-[360px] w-full overflow-hidden sm:h-[440px] md:h-[520px]">
+    <div className="relative h-[440px] w-full overflow-hidden sm:h-[560px] md:h-[640px] lg:h-[720px]">
       {slides.map((slide, i) => (
         <div
           key={slide.id}
@@ -41,11 +41,11 @@ export default function HeroSlider({ slides }: { slides: SlideData[] }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-6 sm:px-10">
             <div key={i === index ? "active" : "inactive"} className="max-w-xl animate-fade-slide">
-              <h2 className="text-2xl font-extrabold leading-tight text-white drop-shadow-sm sm:text-3xl md:text-4xl">
+              <h2 className="text-3xl font-extrabold leading-tight text-white drop-shadow-sm sm:text-4xl md:text-5xl">
                 {slide.title}
               </h2>
               {slide.subtitle && (
-                <p className="mt-3 text-sm text-white/90 sm:text-base">{slide.subtitle}</p>
+                <p className="mt-4 text-base text-white/90 sm:text-lg">{slide.subtitle}</p>
               )}
               <Link
                 href={slide.linkUrl ?? "/products"}

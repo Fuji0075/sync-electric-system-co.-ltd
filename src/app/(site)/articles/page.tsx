@@ -34,14 +34,21 @@ export default async function ArticlesPage() {
                 className="group block overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-brand to-accent text-5xl text-white/90">
-                  <div
-                    className="absolute inset-0 opacity-30"
-                    style={{
-                      backgroundImage: "radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)",
-                      backgroundSize: "20px 20px",
-                    }}
-                  />
-                  <span className="relative">📰</span>
+                  {a.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- admin-supplied cover image, arbitrary local/external URL
+                    <img src={a.coverImage} alt={a.title} className="h-full w-full object-cover" />
+                  ) : (
+                    <>
+                      <div
+                        className="absolute inset-0 opacity-30"
+                        style={{
+                          backgroundImage: "radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)",
+                          backgroundSize: "20px 20px",
+                        }}
+                      />
+                      <span className="relative">📰</span>
+                    </>
+                  )}
                 </div>
                 <div className="p-5">
                   <time className="text-xs font-semibold uppercase tracking-wide text-brand-dark">

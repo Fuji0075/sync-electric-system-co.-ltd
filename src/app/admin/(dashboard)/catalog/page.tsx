@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { createCatalogFile, deleteCatalogFile, updateCatalogFile } from "./actions";
 import { requireModuleAccess } from "@/lib/admin-permissions";
 import EditCatalogModal from "./EditCatalogModal";
+import ImageUploadField from "@/components/admin/ImageUploadField";
 
 export default async function AdminCatalogPage() {
   await requireModuleAccess("catalog");
@@ -34,14 +35,11 @@ export default async function AdminCatalogPage() {
               className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
             />
           </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์รูปหน้าปก (URL)</label>
-            <input
-              name="coverImage"
-              placeholder="/catalogs/covers/motor-catalog.jpg"
-              className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
-            />
-          </div>
+          <ImageUploadField
+            name="coverImage"
+            label="รูปหน้าปก"
+            placeholder="/catalogs/covers/motor-catalog.jpg หรือเลือกไฟล์จากเครื่อง"
+          />
           <div>
             <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลำดับ</label>
             <input

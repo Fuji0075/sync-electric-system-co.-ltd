@@ -1,3 +1,5 @@
+import ImageUploadField from "@/components/admin/ImageUploadField";
+
 type Category = { id: string; name: string };
 
 type ProductFormProps = {
@@ -101,15 +103,12 @@ export default function ProductForm({ action, categories, defaultValues }: Produ
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์รูปภาพ (URL)</label>
-        <input
-          name="imageUrl"
-          defaultValue={defaultValues?.imageUrl ?? ""}
-          placeholder="/products/example.jpg"
-          className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
-        />
-      </div>
+      <ImageUploadField
+        name="imageUrl"
+        label="รูปภาพสินค้า"
+        defaultValue={defaultValues?.imageUrl ?? ""}
+        placeholder="/products/example.jpg หรือเลือกไฟล์จากเครื่อง"
+      />
 
       <div className="flex gap-6">
         <label className="flex items-center gap-2 text-sm text-[var(--admin-text-secondary)]">

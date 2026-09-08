@@ -33,8 +33,13 @@ export default async function ArticleDetailPage({ params }: { params: Params }) 
       </time>
       <h1 className="mt-2 text-2xl font-bold text-neutral-900 sm:text-3xl">{article.title}</h1>
 
-      <div className="mt-6 flex h-56 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-accent text-6xl text-white/80">
-        📰
+      <div className="mt-6 flex h-56 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-accent text-6xl text-white/80">
+        {article.coverImage ? (
+          // eslint-disable-next-line @next/next/no-img-element -- admin-supplied cover image, arbitrary local/external URL
+          <img src={article.coverImage} alt={article.title} className="h-full w-full object-cover" />
+        ) : (
+          "📰"
+        )}
       </div>
 
       <p className="mt-8 whitespace-pre-line text-base leading-relaxed text-neutral-700">

@@ -1,3 +1,5 @@
+import ImageUploadField from "@/components/admin/ImageUploadField";
+
 type BannerFormProps = {
   action: (formData: FormData) => void;
   defaultValues?: {
@@ -30,16 +32,12 @@ export default function BannerForm({ action, defaultValues }: BannerFormProps) {
           className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
         />
       </div>
-      <div>
-        <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์รูปภาพ (URL) *</label>
-        <input
-          name="imageUrl"
-          required
-          defaultValue={defaultValues?.imageUrl}
-          placeholder="/banners/banner-1.svg"
-          className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
-        />
-      </div>
+      <ImageUploadField
+        name="imageUrl"
+        label="รูปภาพแบนเนอร์ *"
+        defaultValue={defaultValues?.imageUrl}
+        placeholder="/banners/banner-1.svg หรือเลือกไฟล์จากเครื่อง"
+      />
       <div>
         <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์เมื่อคลิก</label>
         <input

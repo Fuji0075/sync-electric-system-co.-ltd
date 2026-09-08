@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import ImageUploadField from "@/components/admin/ImageUploadField";
 
 type CatalogFile = {
   id: string;
@@ -87,15 +88,12 @@ export default function EditCatalogModal({
                   className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
                 />
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลิงก์รูปหน้าปก (URL)</label>
-                <input
-                  name="coverImage"
-                  defaultValue={file.coverImage ?? ""}
-                  placeholder="/catalogs/covers/motor-catalog.jpg"
-                  className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
-                />
-              </div>
+              <ImageUploadField
+                name="coverImage"
+                label="รูปหน้าปก"
+                defaultValue={file.coverImage ?? ""}
+                placeholder="/catalogs/covers/motor-catalog.jpg หรือเลือกไฟล์จากเครื่อง"
+              />
               <div>
                 <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">ลำดับ</label>
                 <input
