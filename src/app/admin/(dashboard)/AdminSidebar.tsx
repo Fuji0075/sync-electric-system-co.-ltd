@@ -57,12 +57,12 @@ export default function AdminSidebar({
         collapsed ? "w-[88px]" : "w-72"
       } ${mounted ? "" : "invisible"}`}
     >
-      <div className="flex h-[calc(100vh-2rem)] flex-col rounded-3xl bg-[#181820] text-zinc-300 shadow-xl">
+      <div className="flex h-[calc(100vh-2rem)] flex-col rounded-3xl border border-[var(--admin-border)] bg-[var(--admin-sidebar-bg)] text-[var(--admin-text-secondary)] shadow-xl">
         <button
           type="button"
           onClick={toggleCollapsed}
           aria-label={collapsed ? "ขยายเมนู" : "ย่อเมนู"}
-          className="absolute -right-3 top-8 grid h-7 w-7 place-items-center rounded-full border border-white/10 bg-[#232330] text-zinc-300 shadow-md hover:bg-[#2c2c3a] hover:text-white"
+          className="absolute -right-3 top-8 grid h-7 w-7 place-items-center rounded-full border border-[var(--admin-border)] bg-[var(--admin-toggle-bg)] text-[var(--admin-text-secondary)] shadow-md hover:bg-[var(--admin-surface-softer)] hover:text-[var(--admin-text)]"
         >
           <svg
             viewBox="0 0 24 24"
@@ -85,7 +85,7 @@ export default function AdminSidebar({
         </div>
 
         <div
-          className={`mt-5 flex items-center gap-3 border-b border-white/10 px-5 pb-5 ${
+          className={`mt-5 flex items-center gap-3 border-b border-[var(--admin-border)] px-5 pb-5 ${
             collapsed ? "flex-col justify-center px-2" : ""
           }`}
         >
@@ -99,14 +99,16 @@ export default function AdminSidebar({
           {!collapsed && (
             <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-orange-400">{roleLabel}</p>
-              <p className="truncate text-sm font-semibold text-white">{adminName}</p>
+              <p className="truncate text-sm font-semibold text-[var(--admin-text)]">{adminName}</p>
             </div>
           )}
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           {!collapsed && (
-            <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Main</p>
+            <p className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-widest text-[var(--admin-text-faint)]">
+              Main
+            </p>
           )}
           <div className="flex flex-col gap-1">
             {nav.map((item) => {
@@ -120,8 +122,8 @@ export default function AdminSidebar({
                     collapsed ? "justify-center" : ""
                   } ${
                     active
-                      ? "bg-white/10 text-white shadow-inner"
-                      : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                      ? "bg-[var(--admin-surface-softer)] text-[var(--admin-text)] shadow-inner"
+                      : "text-[var(--admin-text-muted)] hover:bg-[var(--admin-surface-soft)] hover:text-[var(--admin-text)]"
                   }`}
                 >
                   <span className={`text-base ${active ? "" : "opacity-80"}`}>{item.icon}</span>
@@ -135,7 +137,7 @@ export default function AdminSidebar({
           {extraNav.length > 0 && (
             <>
               {!collapsed && (
-                <p className="mt-5 px-2 pb-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                <p className="mt-5 px-2 pb-2 text-[10px] font-semibold uppercase tracking-widest text-[var(--admin-text-faint)]">
                   Super Admin
                 </p>
               )}
@@ -151,8 +153,8 @@ export default function AdminSidebar({
                         collapsed ? "justify-center" : ""
                       } ${
                         active
-                          ? "bg-white/10 text-white shadow-inner"
-                          : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                          ? "bg-[var(--admin-surface-softer)] text-[var(--admin-text)] shadow-inner"
+                          : "text-[var(--admin-text-muted)] hover:bg-[var(--admin-surface-soft)] hover:text-[var(--admin-text)]"
                       }`}
                     >
                       <span className={`text-base ${active ? "" : "opacity-80"}`}>{item.icon}</span>

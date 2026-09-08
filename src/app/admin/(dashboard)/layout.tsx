@@ -44,9 +44,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
       />
 
       <div className="flex-1">
-        <header className="flex items-center justify-between bg-[#0f0f14] px-6 py-3.5">
-          <span className="text-sm text-zinc-400">
-            เข้าสู่ระบบในชื่อ <strong className="text-white">{admin.name}</strong>
+        <header className="flex items-center justify-between border-b border-[var(--admin-border)] bg-[var(--admin-header-bg)] px-6 py-3.5">
+          <span className="text-sm text-[var(--admin-text-muted)]">
+            เข้าสู่ระบบในชื่อ <strong className="text-[var(--admin-text)]">{admin.name}</strong>
             {isSuperAdmin(admin) && (
               <span className="ml-2 rounded-full bg-orange-400/15 px-2 py-0.5 text-[10px] font-bold text-orange-400">
                 SUPER ADMIN
@@ -55,13 +55,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </span>
           <div className="flex items-center gap-3">
             <AdminThemeToggle />
-            <Link href="/" target="_blank" className="text-xs text-zinc-400 hover:text-orange-400">
+            <Link href="/" target="_blank" className="text-xs text-[var(--admin-text-muted)] hover:text-orange-400">
               ดูหน้าเว็บไซต์ ↗
             </Link>
             <form action={logout}>
               <button
                 type="submit"
-                className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:border-red-400/40 hover:text-red-400"
+                className="rounded-full border border-[var(--admin-border-strong)] px-3 py-1.5 text-xs font-semibold text-[var(--admin-text-secondary)] hover:border-red-400/40 hover:text-red-400"
               >
                 ออกจากระบบ
               </button>

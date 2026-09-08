@@ -63,6 +63,9 @@ body {
 .admin-shell {
   --admin-canvas: #0a0a0d;
   --admin-surface: #15151b;
+  --admin-sidebar-bg: #181820;
+  --admin-header-bg: #0f0f14;
+  --admin-toggle-bg: #232330;
   --admin-surface-soft: rgba(255, 255, 255, 0.05);
   --admin-surface-softer: rgba(255, 255, 255, 0.1);
   --admin-border-soft: rgba(255, 255, 255, 0.05);
@@ -79,6 +82,9 @@ body {
 .admin-shell[data-theme="light"] {
   --admin-canvas: #f5f5f5;
   --admin-surface: #ffffff;
+  --admin-sidebar-bg: #ffffff;
+  --admin-header-bg: #ffffff;
+  --admin-toggle-bg: #f5f5f5;
   --admin-surface-soft: #fafafa;
   --admin-surface-softer: #f5f5f5;
   --admin-border-soft: #f5f5f5;

@@ -39,7 +39,7 @@ export default function AdminThemeToggle() {
       onClick={toggle}
       aria-label={theme === "dark" ? "สลับเป็นโทนสว่าง" : "สลับเป็นโทนมืด"}
       title={theme === "dark" ? "สลับเป็นโทนสว่าง" : "สลับเป็นโทนมืด"}
-      className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-zinc-300 hover:border-orange-400/40 hover:text-orange-400"
+      className="grid h-8 w-8 place-items-center rounded-full border border-[var(--admin-border-strong)] text-[var(--admin-text-secondary)] hover:border-orange-400/40 hover:text-orange-400"
     >
       {theme === "dark" ? (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
