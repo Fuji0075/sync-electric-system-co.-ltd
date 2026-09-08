@@ -48,21 +48,25 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  summary     String
-  description String
-  imageUrl    String?
-  brand       String?
-  sku         String?
-  price       Float?
-  inStock     Boolean  @default(true)
-  featured    Boolean  @default(false)
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  summary       String
+  description   String
+  imageUrl      String?
+  galleryImages String? // JSON array of extra image URLs, shown as gallery thumbnails
+  brand         String?
+  series        String? // e.g. "GB-Series", shown as a tag next to the product title
+  sku           String?
+  price         Float?
+  specs         String? // JSON array of { label, value } — flexible spec rows, varies per category
+  highlights    String? // JSON array of strings — "จุดเด่นสินค้า" bullet points
+  inStock       Boolean  @default(true)
+  featured      Boolean  @default(false)
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Article {

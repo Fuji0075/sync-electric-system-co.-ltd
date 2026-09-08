@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { parseSpecs, parseStringList } from "@/lib/product-specs";
 
 function slugify(input: string) {
   return input
@@ -14,14 +15,21 @@ function slugify(input: string) {
 
 function readProductInput(formData: FormData) {
   const priceRaw = String(formData.get("price") ?? "").trim();
+  const specs = parseSpecs(String(formData.get("specs") ?? ""));
+  const highlights = parseStringList(String(formData.get("highlights") ?? ""));
+  const galleryImages = parseStringList(String(formData.get("galleryImages") ?? ""));
   return {
     name: String(formData.get("name") ?? "").trim(),
     summary: String(formData.get("summary") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),
     imageUrl: String(formData.get("imageUrl") ?? "").trim() || null,
+    galleryImages: galleryImages.length > 0 ? JSON.stringify(galleryImages) : null,
     brand: String(formData.get("brand") ?? "").trim() || null,
+    series: String(formData.get("series") ?? "").trim() || null,
     sku: String(formData.get("sku") ?? "").trim() || null,
     price: priceRaw ? Number(priceRaw) : null,
+    specs: specs.length > 0 ? JSON.stringify(specs) : null,
+    highlights: highlights.length > 0 ? JSON.stringify(highlights) : null,
     categoryId: String(formData.get("categoryId") ?? ""),
     inStock: formData.get("inStock") === "on",
     featured: formData.get("featured") === "on",

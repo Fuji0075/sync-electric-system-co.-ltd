@@ -21,16 +21,27 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-brand hover:shadow-lg"
     >
       <div className="relative flex h-36 items-center justify-center overflow-hidden bg-gradient-to-br from-brand/10 to-accent/5">
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: "radial-gradient(circle, #0f6b2e 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
-          }}
-        />
-        <span className="relative grid h-16 w-16 place-items-center rounded-2xl bg-white text-3xl shadow-sm transition group-hover:scale-110">
-          {categoryIcon(product.category.slug)}
-        </span>
+        {product.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- admin-supplied product image, arbitrary local/external URL
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="h-full w-full object-contain p-3 transition group-hover:scale-105"
+          />
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 opacity-40"
+              style={{
+                backgroundImage: "radial-gradient(circle, #0f6b2e 1px, transparent 1px)",
+                backgroundSize: "16px 16px",
+              }}
+            />
+            <span className="relative grid h-16 w-16 place-items-center rounded-2xl bg-white text-3xl shadow-sm transition group-hover:scale-110">
+              {categoryIcon(product.category.slug)}
+            </span>
+          </>
+        )}
         {product.inStock && (
           <span className="absolute right-2 top-2 rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
             พร้อมส่ง

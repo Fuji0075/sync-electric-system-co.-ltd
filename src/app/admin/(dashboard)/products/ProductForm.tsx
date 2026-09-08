@@ -1,4 +1,8 @@
 import ImageUploadField from "@/components/admin/ImageUploadField";
+import GalleryUploadField from "@/components/admin/GalleryUploadField";
+import SpecListField from "@/components/admin/SpecListField";
+import StringListField from "@/components/admin/StringListField";
+import { parseSpecs, parseStringList } from "@/lib/product-specs";
 
 type Category = { id: string; name: string };
 
@@ -10,9 +14,13 @@ type ProductFormProps = {
     summary: string;
     description: string;
     imageUrl: string | null;
+    galleryImages: string | null;
     brand: string | null;
+    series: string | null;
     sku: string | null;
     price: number | null;
+    specs: string | null;
+    highlights: string | null;
     categoryId: string;
     inStock: boolean;
     featured: boolean;
@@ -70,12 +78,20 @@ export default function ProductForm({ action, categories, defaultValues }: Produ
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div>
           <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">แบรนด์</label>
           <input
             name="brand"
             defaultValue={defaultValues?.brand ?? ""}
+            className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--admin-text-secondary)]">รุ่น/ซีรีส์ เช่น GB-Series</label>
+          <input
+            name="series"
+            defaultValue={defaultValues?.series ?? ""}
             className="w-full rounded-lg border border-[var(--admin-border-strong)] bg-[var(--admin-surface-soft)] px-3 py-2 text-sm text-[var(--admin-text)] outline-none placeholder:text-[var(--admin-text-faint)] focus:border-brand"
           />
         </div>
@@ -105,9 +121,28 @@ export default function ProductForm({ action, categories, defaultValues }: Produ
 
       <ImageUploadField
         name="imageUrl"
-        label="รูปภาพสินค้า"
+        label="รูปภาพหลัก"
         defaultValue={defaultValues?.imageUrl ?? ""}
         placeholder="/products/example.jpg หรือเลือกไฟล์จากเครื่อง"
+      />
+
+      <GalleryUploadField
+        name="galleryImages"
+        label="แกลเลอรีรูปภาพเพิ่มเติม"
+        defaultValue={parseStringList(defaultValues?.galleryImages ?? null)}
+      />
+
+      <SpecListField
+        name="specs"
+        label="ตารางสเปกสินค้า (Specifications)"
+        defaultValue={parseSpecs(defaultValues?.specs ?? null)}
+      />
+
+      <StringListField
+        name="highlights"
+        label="จุดเด่นสินค้า"
+        defaultValue={parseStringList(defaultValues?.highlights ?? null)}
+        placeholder="เช่น สินค้าคุณภาพมาตรฐานสากล"
       />
 
       <div className="flex gap-6">
