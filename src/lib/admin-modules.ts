@@ -4,6 +4,7 @@
 export const MODULES = [
   { key: "banners", label: "แบนเนอร์หน้าแรก" },
   { key: "categories", label: "หมวดหมู่สินค้า" },
+  { key: "brands", label: "แบรนด์สินค้า" },
   { key: "products", label: "สินค้า" },
   { key: "articles", label: "บทความ" },
   { key: "catalog", label: "แค็ตตาล็อก" },

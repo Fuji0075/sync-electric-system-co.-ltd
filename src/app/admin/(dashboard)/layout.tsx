@@ -10,6 +10,7 @@ const NAV: { href: string; label: string; icon: string; module?: ModuleKey }[] =
   { href: "/admin/banners", label: "แบนเนอร์หน้าแรก", icon: "🖼️", module: "banners" },
   { href: "/admin/category-groups", label: "หมวดหมู่หลัก", icon: "🗃️", module: "categories" },
   { href: "/admin/categories", label: "หมวดหมู่สินค้า", icon: "🗂️", module: "categories" },
+  { href: "/admin/brands", label: "แบรนด์สินค้า", icon: "🏷️", module: "brands" },
   { href: "/admin/products", label: "สินค้า", icon: "⚙️", module: "products" },
   { href: "/admin/articles", label: "บทความ", icon: "📰", module: "articles" },
   { href: "/admin/catalog", label: "แค็ตตาล็อก", icon: "📄", module: "catalog" },
