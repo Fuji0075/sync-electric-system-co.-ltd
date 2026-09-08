@@ -67,16 +67,15 @@ function scoreProduct(product: ProductRow, query: string) {
   return score;
 }
 
-function formatProductBlock(p: ProductRow) {
-  // Lead with the product's own description (the same text shown on its
-  // product page) so the chat answer reads like real product info, not
-  // just a search-result label.
-  const lines = [`• ${p.name} (${p.category.name})`, `  ${p.summary}`];
-  const meta = [p.inStock ? "มีสินค้าพร้อมส่ง" : "สอบถามสต๊อค"];
-  if (p.brand) meta.push(`แบรนด์: ${p.brand}`);
-  if (p.sku) meta.push(`รหัส: ${p.sku}`);
-  lines.push(`  ${meta.join(" — ")}`);
-  return lines.join("\n");
+function formatProductBlock(p: ProductRow, index: number) {
+  // Reads like a person typing on LINE: short lines, no bullet/indent
+  // formatting, stock and brand/sku woven into a natural sentence instead
+  // of a labeled spec sheet.
+  let stockLine = p.inStock ? "มีสินค้าพร้อมส่งค่ะ" : "ต้องขอเช็คสต๊อคให้อีกทีนะคะ";
+  if (p.brand) stockLine += ` (แบรนด์ ${p.brand})`;
+  if (p.sku) stockLine += ` รหัส ${p.sku}`;
+
+  return `${index}. ${p.name} — ${p.category.name}\n${p.summary} ${stockLine}`;
 }
 
 /**
@@ -90,7 +89,7 @@ export async function generateAiReply(message: string): Promise<string | null> {
   if (!query) return null;
 
   if (GREETING_WORDS.some((w) => query.includes(w))) {
-    return "สวัสดีค่ะ 👋 สอบถามข้อมูลสินค้า สเปค หรือขอใบเสนอราคาได้เลยค่ะ เช่น พิมพ์ชื่อรุ่นหรือประเภทสินค้าที่สนใจ";
+    return "สวัสดีค่ะ 😊 มีสินค้ารุ่นไหนหรืออยากสอบถามอะไรบอกได้เลยนะคะ";
   }
 
   const products = await prisma.product.findMany({
@@ -110,15 +109,8 @@ export async function generateAiReply(message: string): Promise<string | null> {
   if (scored.length === 0) {
     if (wantsGeneralInfo) {
       const categories = await prisma.category.findMany({ orderBy: { order: "asc" } });
-      const categoryList = categories.map((c) => `• ${c.name}`).join("\n");
-      return [
-        "รบกวนแจ้งชื่อสินค้าหรือรุ่นที่สนใจได้ไหมคะ จะได้ส่งสเปค/ราคาให้ตรงรุ่นเลยค่ะ 🙂",
-        "",
-        "ตอนนี้เรามีสินค้ากลุ่มหลักๆ ดังนี้ค่ะ:",
-        categoryList,
-        "",
-        "พิมพ์ชื่อกลุ่มหรือรุ่นที่สนใจได้เลยค่ะ",
-      ].join("\n");
+      const categoryList = categories.map((c) => c.name).join(", ");
+      return `รบกวนบอกชื่อสินค้าหรือรุ่นที่สนใจหน่อยได้ไหมคะ จะได้ดูสเปค/ราคาให้ตรงรุ่นเลยค่ะ ตอนนี้มีสินค้ากลุ่ม ${categoryList} พิมพ์ชื่อกลุ่มหรือรุ่นที่สนใจมาได้เลยค่ะ`;
     }
     return null;
   }
@@ -130,25 +122,27 @@ export async function generateAiReply(message: string): Promise<string | null> {
       { slug: b.product.slug, name: b.product.name },
     ]);
     const compareText = [
-      `เปรียบเทียบสินค้าที่เกี่ยวข้องค่ะ:`,
-      formatProductBlock(a.product),
-      formatProductBlock(b.product),
-      `หากต้องการสเปคละเอียดหรือใบเสนอราคา แจ้งชื่อรุ่นที่สนใจ หรือกดปุ่มด้านล่างได้เลยค่ะ`,
+      "เทียบให้ดูเลยนะคะ 😊",
+      "",
+      formatProductBlock(a.product, 1),
+      "",
+      formatProductBlock(b.product, 2),
+      "",
+      "สนใจรุ่นไหนเป็นพิเศษไหมคะ หรือให้จัดใบเสนอราคามาให้ดูเลยก็ได้ค่ะ",
     ].join("\n");
     return compareText + compareButtons;
   }
 
   const top = scored.slice(0, 3);
-  const lines = top.map((r) => formatProductBlock(r.product));
+  const lines = top.map((r, i) => formatProductBlock(r.product, i + 1));
   const buttons = encodeQuoteButtons(
     top.map((r) => ({ slug: r.product.slug, name: r.product.name }))
   );
 
-  const suffix = wantsContact
-    ? "\n\nสนใจรุ่นไหนกดปุ่ม \"ขอใบเสนอราคา\" ด้านล่างได้เลยค่ะ"
-    : "\n\nต้องการรายละเอียดเพิ่มเติมหรือใบเสนอราคา กดปุ่มด้านล่างหรือแจ้งได้เลยค่ะ";
+  const intro = wantsContact ? "เจอสินค้าที่ถามค่ะ 😊" : "เจอสินค้าที่เกี่ยวข้องค่ะ 😊";
+  const suffix = "สนใจรุ่นไหนแจ้งชื่อมาได้เลยค่ะ เดี๋ยวจัดใบเสนอราคาให้ค่ะ";
 
-  return `พบสินค้าที่เกี่ยวข้องค่ะ:\n${lines.join("\n")}${suffix}${buttons}`;
+  return [intro, "", lines.join("\n\n"), "", suffix].join("\n") + buttons;
 }
 
 /**
