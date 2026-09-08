@@ -21,7 +21,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   const { slug } = await params;
   const product = await prisma.product.findUnique({
     where: { slug },
-    include: { category: true },
+    include: { category: { include: { group: true } } },
   });
 
   if (!product) notFound();
@@ -78,29 +78,40 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
 
         <div>
-          <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-neutral-500">
+          <h1 className="text-2xl font-extrabold text-neutral-900 sm:text-3xl">{product.name}</h1>
+          <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-sm text-neutral-500">
             <span>{product.category.name}</span>
             {product.series && (
               <>
                 <span className="text-neutral-300">·</span>
-                <span className="text-brand-dark">{product.series}</span>
+                <span>{product.series}</span>
+              </>
+            )}
+            {product.category.group && (
+              <>
+                <span className="text-neutral-300">·</span>
+                <span>กลุ่ม {product.category.group.name}</span>
               </>
             )}
           </div>
-          <h1 className="mt-1 text-2xl font-bold text-neutral-900 sm:text-3xl">{product.name}</h1>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {product.brand && (
-              <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-600">
-                {product.brand}
-              </span>
-            )}
-            {product.sku && (
-              <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-600">
-                รหัสสินค้า {product.sku}
-              </span>
-            )}
-          </div>
+          {(product.brand || highlights.length > 0) && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {product.brand && (
+                <span className="rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-600">
+                  {product.brand}
+                </span>
+              )}
+              {highlights.slice(0, 2).map((h) => (
+                <span
+                  key={h}
+                  className="rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-600"
+                >
+                  {h}
+                </span>
+              ))}
+            </div>
+          )}
 
           {highlightSpecs.length > 0 && (
             <div className={`mt-4 grid gap-3 ${highlightSpecs.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
@@ -113,53 +124,55 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             </div>
           )}
 
-          {product.price != null && (
-            <p className="mt-4 text-3xl font-extrabold text-brand-dark">
-              ฿{product.price.toLocaleString("th-TH")}
+          <div className="mt-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+            <p className="text-xs text-neutral-500">ราคา</p>
+            <p className="mb-3 text-lg font-extrabold text-neutral-900">
+              {product.price != null ? `฿${product.price.toLocaleString("th-TH")}` : "สอบถาม / ขอใบเสนอราคา"}
             </p>
-          )}
 
-          <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-600">
-            {product.description}
-          </p>
-
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                product.inStock ? "bg-brand/10 text-brand-dark" : "bg-neutral-100 text-neutral-500"
-              }`}
-            >
-              {product.inStock ? "● มีสินค้าพร้อมส่ง" : "○ สอบถามสต๊อคก่อนสั่งซื้อ"}
-            </span>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3">
             <QuoteRequestModal productId={product.id} productName={product.name} />
-            <a
-              href={`tel:${settings.mobile.replace(/[^0-9+]/g, "")}`}
-              className="rounded-full border border-neutral-300 px-6 py-3 text-sm font-bold text-neutral-700 transition hover:border-brand hover:text-brand-dark"
-            >
-              โทร {settings.mobile}
-            </a>
+
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-neutral-100 pt-4 text-sm">
+              <a
+                href={`tel:${settings.mobile.replace(/[^0-9+]/g, "")}`}
+                className="flex items-center gap-1.5 font-semibold text-neutral-600 hover:text-orange-600"
+              >
+                📞 โทรสอบถาม {settings.mobile}
+              </a>
+              <a
+                href={`mailto:${settings.email}?subject=${encodeURIComponent(`ขอสเปก/เอกสาร: ${product.name}`)}`}
+                className="flex items-center gap-1.5 font-semibold text-neutral-600 hover:text-orange-600"
+              >
+                ✉️ อีเมลขอสเปก/เอกสาร
+              </a>
+            </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-6 text-center">
-            <div>
-              <span className="text-xl">🏆</span>
-              <p className="mt-1 text-[11px] leading-tight text-neutral-500">สินค้าคุณภาพแท้</p>
+          <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-xl border border-neutral-200 p-3">
+              <span className="mx-auto grid h-8 w-8 place-items-center rounded-full bg-emerald-100 text-base">✅</span>
+              <p className="mt-1.5 text-xs font-bold text-neutral-800">สินค้าของแท้</p>
+              <p className="text-[11px] leading-tight text-neutral-500">รับประกันคุณภาพ</p>
             </div>
-            <div>
-              <span className="text-xl">📦</span>
-              <p className="mt-1 text-[11px] leading-tight text-neutral-500">
-                {product.inStock ? "มีสต๊อก/ส่งไว" : "สั่งผลิตตามสเปก"}
+            <div className="rounded-xl border border-neutral-200 p-3">
+              <span className="mx-auto grid h-8 w-8 place-items-center rounded-full bg-blue-100 text-base">🚚</span>
+              <p className="mt-1.5 text-xs font-bold text-neutral-800">
+                {product.inStock ? "มีสต๊อก" : "สั่งผลิต"}
               </p>
+              <p className="text-[11px] leading-tight text-neutral-500">จัดส่งทั่วไทย</p>
             </div>
-            <div>
-              <span className="text-xl">🛡️</span>
-              <p className="mt-1 text-[11px] leading-tight text-neutral-500">รับประกันสินค้า</p>
+            <div className="rounded-xl border border-neutral-200 p-3">
+              <span className="mx-auto grid h-8 w-8 place-items-center rounded-full bg-purple-100 text-base">🎧</span>
+              <p className="mt-1.5 text-xs font-bold text-neutral-800">ทีมวิศวกร</p>
+              <p className="text-[11px] leading-tight text-neutral-500">ให้คำปรึกษาฟรี</p>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-16 max-w-3xl">
+        <h2 className="mb-3 text-sm font-bold text-neutral-900">รายละเอียดสินค้า</h2>
+        <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-600">{product.description}</p>
       </div>
 
       {(specs.length > 0 || highlights.length > 0) && (

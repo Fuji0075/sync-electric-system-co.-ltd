@@ -20,6 +20,7 @@ export default function QuoteRequestModal({
   // opens the form immediately instead of making the visitor find the
   // button again on the page.
   const [open, setOpen] = useState(() => searchParams.get("quote") === "1");
+  const [qty, setQty] = useState(1);
   const [state, formAction, pending] = useActionState(submitQuoteRequest, initialState);
 
   useEffect(() => {
@@ -38,13 +39,34 @@ export default function QuoteRequestModal({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand-dark"
-      >
-        ขอใบเสนอราคา
-      </button>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center rounded-full border border-neutral-300">
+          <button
+            type="button"
+            onClick={() => setQty((q) => Math.max(1, q - 1))}
+            aria-label="ลดจำนวน"
+            className="grid h-11 w-11 place-items-center text-lg font-bold text-neutral-600 hover:text-orange-600"
+          >
+            −
+          </button>
+          <span className="w-8 text-center text-sm font-bold text-neutral-900">{qty}</span>
+          <button
+            type="button"
+            onClick={() => setQty((q) => q + 1)}
+            aria-label="เพิ่มจำนวน"
+            className="grid h-11 w-11 place-items-center text-lg font-bold text-neutral-600 hover:text-orange-600"
+          >
+            +
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700"
+        >
+          📄 ขอใบเสนอราคา
+        </button>
+      </div>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -129,7 +151,7 @@ export default function QuoteRequestModal({
                       <label className="mb-1 block text-sm font-medium text-neutral-700">จำนวน</label>
                       <input
                         name="quantity"
-                        placeholder="เช่น 2 ตัว"
+                        defaultValue={String(qty)}
                         className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
                       />
                     </div>
@@ -147,7 +169,7 @@ export default function QuoteRequestModal({
                   <button
                     type="submit"
                     disabled={pending}
-                    className="w-full rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-white transition hover:bg-brand-dark disabled:opacity-60"
+                    className="w-full rounded-full bg-orange-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-orange-700 disabled:opacity-60"
                   >
                     {pending ? "กำลังส่ง..." : "ส่งคำขอใบเสนอราคา"}
                   </button>
