@@ -16,7 +16,7 @@ export default async function EditBannerPage({ params }: { params: Params }) {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">แก้ไขแบนเนอร์</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">แก้ไขแบนเนอร์</h1>
       <BannerForm action={action} defaultValues={banner} />
     </div>
   );

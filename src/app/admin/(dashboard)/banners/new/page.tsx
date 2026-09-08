@@ -6,7 +6,7 @@ export default async function NewBannerPage() {
   await requireModuleAccess("banners");
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">เพิ่มแบนเนอร์</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">เพิ่มแบนเนอร์</h1>
       <BannerForm action={createBanner} />
     </div>
   );

@@ -13,7 +13,7 @@ export default async function AdminCategoriesPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-neutral-900">หมวดหมู่สินค้า</h1>
+        <h1 className="text-xl font-bold text-white">หมวดหมู่สินค้า</h1>
         <Link
           href="/admin/categories/new"
           className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
@@ -22,9 +22,9 @@ export default async function AdminCategoriesPage() {
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
             <tr>
               <th className="px-4 py-3">ลำดับ</th>
               <th className="px-4 py-3">ชื่อหมวดหมู่</th>
@@ -33,18 +33,18 @@ export default async function AdminCategoriesPage() {
               <th className="px-4 py-3 text-right">จัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
+          <tbody className="divide-y divide-white/10">
             {categories.map((c) => (
               <tr key={c.id}>
-                <td className="px-4 py-3 text-neutral-500">{c.order}</td>
-                <td className="px-4 py-3 font-medium text-neutral-800">{c.name}</td>
-                <td className="px-4 py-3 text-neutral-500">{c.slug}</td>
-                <td className="px-4 py-3 text-neutral-500">{c._count.products}</td>
+                <td className="px-4 py-3 text-zinc-500">{c.order}</td>
+                <td className="px-4 py-3 font-medium text-white">{c.name}</td>
+                <td className="px-4 py-3 text-zinc-500">{c.slug}</td>
+                <td className="px-4 py-3 text-zinc-500">{c._count.products}</td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-3">
                     <Link
                       href={`/admin/categories/${c.id}/edit`}
-                      className="text-brand-dark hover:underline"
+                      className="text-emerald-400 hover:underline"
                     >
                       แก้ไข
                     </Link>
@@ -57,7 +57,7 @@ export default async function AdminCategoriesPage() {
                       <button
                         type="submit"
                         disabled={c._count.products > 0}
-                        className="text-red-500 hover:underline disabled:cursor-not-allowed disabled:text-neutral-300"
+                        className="text-red-500 hover:underline disabled:cursor-not-allowed disabled:text-zinc-600"
                         title={c._count.products > 0 ? "ต้องลบสินค้าในหมวดนี้ก่อน" : ""}
                       >
                         ลบ
@@ -69,7 +69,7 @@ export default async function AdminCategoriesPage() {
             ))}
             {categories.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-neutral-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-zinc-600">
                   ยังไม่มีหมวดหมู่สินค้า
                 </td>
               </tr>

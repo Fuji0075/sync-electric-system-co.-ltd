@@ -74,28 +74,28 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <AutoRefresh intervalMs={10000} />
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">แดชบอร์ด</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">แดชบอร์ด</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visibleCards.map((c) => (
           <Link
             key={c.label}
             href={c.href}
-            className={`flex items-center gap-4 rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md ${
+            className={`flex items-center gap-4 rounded-2xl border bg-[#15151b] p-5 shadow-sm transition hover:shadow-md ${
               c.highlight
-                ? "border-red-300 hover:border-red-400"
-                : "border-neutral-200 hover:border-brand"
+                ? "border-red-500/40 hover:border-red-400"
+                : "border-white/10 hover:border-brand"
             }`}
           >
             <span className="text-3xl">{c.icon}</span>
             <div>
               <div
                 className={`text-2xl font-extrabold ${
-                  c.highlight ? "text-red-600" : "text-neutral-900"
+                  c.highlight ? "text-red-400" : "text-white"
                 }`}
               >
                 {c.value}
               </div>
-              <div className="text-xs text-neutral-500">{c.label}</div>
+              <div className="text-xs text-zinc-500">{c.label}</div>
             </div>
           </Link>
         ))}

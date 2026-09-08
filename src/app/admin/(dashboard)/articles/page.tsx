@@ -10,7 +10,7 @@ export default async function AdminArticlesPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-neutral-900">บทความ</h1>
+        <h1 className="text-xl font-bold text-white">บทความ</h1>
         <Link
           href="/admin/articles/new"
           className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
@@ -19,9 +19,9 @@ export default async function AdminArticlesPage() {
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
             <tr>
               <th className="px-4 py-3">หัวข้อ</th>
               <th className="px-4 py-3">วันที่เผยแพร่</th>
@@ -29,23 +29,23 @@ export default async function AdminArticlesPage() {
               <th className="px-4 py-3 text-right">จัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
+          <tbody className="divide-y divide-white/10">
             {articles.map((a) => (
               <tr key={a.id}>
-                <td className="px-4 py-3 font-medium text-neutral-800">{a.title}</td>
-                <td className="px-4 py-3 text-neutral-500">
+                <td className="px-4 py-3 font-medium text-white">{a.title}</td>
+                <td className="px-4 py-3 text-zinc-500">
                   {new Date(a.publishedAt).toLocaleDateString("th-TH")}
                 </td>
                 <td className="px-4 py-3">
                   {a.published ? (
-                    <span className="text-brand-dark">เผยแพร่แล้ว</span>
+                    <span className="text-emerald-400">เผยแพร่แล้ว</span>
                   ) : (
-                    <span className="text-neutral-400">ฉบับร่าง</span>
+                    <span className="text-zinc-600">ฉบับร่าง</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-3">
-                    <Link href={`/admin/articles/${a.id}/edit`} className="text-brand-dark hover:underline">
+                    <Link href={`/admin/articles/${a.id}/edit`} className="text-emerald-400 hover:underline">
                       แก้ไข
                     </Link>
                     <form
@@ -64,7 +64,7 @@ export default async function AdminArticlesPage() {
             ))}
             {articles.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-neutral-400">
+                <td colSpan={4} className="px-4 py-8 text-center text-zinc-600">
                   ยังไม่มีบทความ
                 </td>
               </tr>

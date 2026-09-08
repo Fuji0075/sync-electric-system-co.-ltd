@@ -4,9 +4,9 @@ import { deleteQuoteDocument } from "./actions";
 import { requireModuleAccess } from "@/lib/admin-permissions";
 
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
-  draft: { label: "ฉบับร่าง", className: "bg-neutral-100 text-neutral-600" },
+  draft: { label: "ฉบับร่าง", className: "bg-white/10 text-zinc-400" },
   approved: { label: "อนุมัติแล้ว รอส่ง", className: "bg-amber-100 text-amber-700" },
-  sent: { label: "ส่งแล้ว", className: "bg-brand/10 text-brand-dark" },
+  sent: { label: "ส่งแล้ว", className: "bg-brand/10 text-emerald-400" },
 };
 
 export default async function AdminQuotationsPage() {
@@ -18,11 +18,11 @@ export default async function AdminQuotationsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">ใบเสนอราคา</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">ใบเสนอราคา</h1>
 
-      <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
             <tr>
               <th className="px-4 py-3">เลขที่</th>
               <th className="px-4 py-3">ลูกค้า</th>
@@ -32,17 +32,17 @@ export default async function AdminQuotationsPage() {
               <th className="px-4 py-3 text-right">จัดการ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
+          <tbody className="divide-y divide-white/10">
             {quotes.map((q) => {
               const subtotal = q.items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
               const status = STATUS_LABEL[q.status] ?? STATUS_LABEL.draft;
               return (
                 <tr key={q.id}>
-                  <td className="px-4 py-3 font-medium text-neutral-800">{q.quoteNumber}</td>
-                  <td className="px-4 py-3 text-neutral-600">
+                  <td className="px-4 py-3 font-medium text-white">{q.quoteNumber}</td>
+                  <td className="px-4 py-3 text-zinc-400">
                     {q.companyName ?? q.attn ?? "-"}
                   </td>
-                  <td className="px-4 py-3 text-neutral-600">
+                  <td className="px-4 py-3 text-zinc-400">
                     {subtotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })} บาท
                   </td>
                   <td className="px-4 py-3">
@@ -50,18 +50,18 @@ export default async function AdminQuotationsPage() {
                       {status.label}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-neutral-500">
+                  <td className="px-4 py-3 text-zinc-500">
                     {new Date(q.createdAt).toLocaleDateString("th-TH")}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-3">
-                      <Link href={`/admin/quotations/${q.id}/edit`} className="text-brand-dark hover:underline">
+                      <Link href={`/admin/quotations/${q.id}/edit`} className="text-emerald-400 hover:underline">
                         แก้ไข
                       </Link>
                       <Link
                         href={`/admin/quotations/${q.id}/print`}
                         target="_blank"
-                        className="text-brand-dark hover:underline"
+                        className="text-emerald-400 hover:underline"
                       >
                         ดูตัวอย่าง
                       </Link>
@@ -82,7 +82,7 @@ export default async function AdminQuotationsPage() {
             })}
             {quotes.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-neutral-400">
+                <td colSpan={6} className="px-4 py-10 text-center text-zinc-600">
                   ยังไม่มีใบเสนอราคา — สร้างจากหน้าแชทลูกค้า หรือหน้าคำขอใบเสนอราคาได้
                 </td>
               </tr>

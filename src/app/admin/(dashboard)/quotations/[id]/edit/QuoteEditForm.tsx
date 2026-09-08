@@ -47,11 +47,11 @@ export default async function QuoteEditForm({
       <div className="mb-6 flex items-center justify-between">
         <div>
           {showBackLink && (
-            <Link href="/admin/quotations" className="text-sm text-brand-dark hover:underline">
+            <Link href="/admin/quotations" className="text-sm text-emerald-400 hover:underline">
               ← กลับไปรายการใบเสนอราคา
             </Link>
           )}
-          <h1 className="mt-1 text-xl font-bold text-neutral-900">
+          <h1 className="mt-1 text-xl font-bold text-white">
             แก้ไขใบเสนอราคา {quote.quoteNumber}
           </h1>
         </div>
@@ -59,10 +59,10 @@ export default async function QuoteEditForm({
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold ${
               quote.status === "sent"
-                ? "bg-brand/10 text-brand-dark"
+                ? "bg-brand/10 text-emerald-400"
                 : quote.status === "approved"
                   ? "bg-amber-100 text-amber-700"
-                  : "bg-neutral-100 text-neutral-600"
+                  : "bg-white/10 text-zinc-400"
             }`}
           >
             {quote.status === "sent" ? "ส่งแล้ว" : quote.status === "approved" ? "อนุมัติแล้ว" : "ฉบับร่าง"}
@@ -71,21 +71,21 @@ export default async function QuoteEditForm({
         </div>
       </div>
 
-      <div className="mb-4 flex items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+      <div className="mb-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
         <div className="flex items-center gap-3">
           {quote.assignedAdmin?.signatureUrl && (
             // eslint-disable-next-line @next/next/no-img-element -- small inline base64 signature preview
             <img
               src={quote.assignedAdmin.signatureUrl}
               alt=""
-              className="h-8 rounded border border-neutral-200 bg-white p-0.5"
+              className="h-8 rounded border border-white/10 bg-[#15151b] p-0.5"
             />
           )}
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-zinc-400">
             {quote.assignedAdmin ? (
               <>
-                ผู้รับผิดชอบ: <span className="font-semibold text-neutral-800">{quote.assignedAdmin.name}</span>
-                {isMine && <span className="ml-1 text-xs text-brand-dark">(คุณ)</span>}
+                ผู้รับผิดชอบ: <span className="font-semibold text-white">{quote.assignedAdmin.name}</span>
+                {isMine && <span className="ml-1 text-xs text-emerald-400">(คุณ)</span>}
               </>
             ) : (
               "ยังไม่มีผู้รับผิดชอบใบเสนอราคานี้"
@@ -96,7 +96,7 @@ export default async function QuoteEditForm({
           <form action={claimAction}>
             <button
               type="submit"
-              className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:border-brand hover:text-brand-dark"
+              className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-400 hover:border-brand hover:text-brand"
             >
               รับผิดชอบใบนี้ (ใช้ชื่อ/ลายเซ็นของฉัน)
             </button>
@@ -104,119 +104,119 @@ export default async function QuoteEditForm({
         )}
       </div>
 
-      <form action={action} className="space-y-6 rounded-2xl border border-neutral-200 bg-white p-6">
+      <form action={action} className="space-y-6 rounded-2xl border border-white/10 bg-[#15151b] p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">บริษัทลูกค้า (TO)</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">บริษัทลูกค้า (TO)</label>
             <input
               name="companyName"
               defaultValue={quote.companyName ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ผู้ติดต่อ (ATTN)</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ผู้ติดต่อ (ATTN)</label>
             <input
               name="attn"
               defaultValue={quote.attn ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">โทรศัพท์</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">โทรศัพท์</label>
             <input
               name="tel"
               defaultValue={quote.tel ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">แฟกซ์</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">แฟกซ์</label>
             <input
               name="fax"
               defaultValue={quote.fax ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">
+            <label className="mb-1 block text-sm font-medium text-zinc-300">
               อีเมลลูกค้า (สำหรับส่งใบเสนอราคา)
             </label>
             <input
               name="email"
               type="email"
               defaultValue={quote.email ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">วันที่ออกเอกสาร</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">วันที่ออกเอกสาร</label>
             <input
               name="issueDate"
               type="date"
               defaultValue={toDateInputValue(quote.issueDate)}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">เงื่อนไขการชำระเงิน (Credit Term)</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">เงื่อนไขการชำระเงิน (Credit Term)</label>
             <input
               name="creditTerm"
               defaultValue={quote.creditTerm}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">กำหนดส่งมอบ (Delivery)</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">กำหนดส่งมอบ (Delivery)</label>
             <input
               name="deliveryDays"
               placeholder="เช่น 7 วัน"
               defaultValue={quote.deliveryDays}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ยืนราคาภายใน (วัน)</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ยืนราคาภายใน (วัน)</label>
             <input
               name="validityDays"
               type="number"
               defaultValue={quote.validityDays}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
         </div>
 
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-900">รายการสินค้า</h2>
+          <h2 className="mb-2 text-sm font-semibold text-white">รายการสินค้า</h2>
           <ItemsEditor initialItems={quote.items} initialVatPercent={quote.vatPercent} />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ชื่อพนักงานขาย</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ชื่อพนักงานขาย</label>
             <input
               name="salesName"
               defaultValue={quote.salesName ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">เบอร์โทรพนักงานขาย</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">เบอร์โทรพนักงานขาย</label>
             <input
               name="salesPhone"
               defaultValue={quote.salesPhone ?? ""}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-700">หมายเหตุเพิ่มเติม</label>
+          <label className="mb-1 block text-sm font-medium text-zinc-300">หมายเหตุเพิ่มเติม</label>
           <textarea
             name="notes"
             rows={2}
             defaultValue={quote.notes ?? ""}
-            className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+            className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
           />
         </div>
 

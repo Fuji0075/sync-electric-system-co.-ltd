@@ -9,7 +9,7 @@ export default async function NewProductPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">เพิ่มสินค้า</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">เพิ่มสินค้า</h1>
       <ProductForm action={createProduct} categories={categories} />
     </div>
   );

@@ -19,8 +19,8 @@ export default function ChatAvatar({
       </div>
       {online !== undefined && (
         <span
-          className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white ${
-            online ? "bg-emerald-500" : "bg-neutral-300"
+          className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#15151b] ${
+            online ? "bg-emerald-500" : "bg-zinc-500"
           }`}
         />
       )}

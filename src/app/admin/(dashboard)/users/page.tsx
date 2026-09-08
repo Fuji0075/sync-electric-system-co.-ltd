@@ -27,8 +27,8 @@ export default async function AdminUsersPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900">ผู้ใช้งานทั้งหมดในระบบ</h1>
-          <p className="text-sm text-neutral-500">
+          <h1 className="text-xl font-bold text-white">ผู้ใช้งานทั้งหมดในระบบ</h1>
+          <p className="text-sm text-zinc-500">
             รวมข้อมูล Super Admin, พนักงานฝ่ายหลังบ้าน และสมาชิกลูกค้าจากทุกตารางในฐานข้อมูล
           </p>
         </div>
@@ -47,15 +47,15 @@ export default async function AdminUsersPage() {
           <p className="mt-1 text-3xl font-bold text-amber-800">{superAdmins.length}</p>
           <p className="mt-1 text-xs text-amber-700">ผู้ดูแลระบบสูงสุด กำหนดสิทธิ์ได้ทั้งหมด</p>
         </div>
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">พนักงาน / Admin</p>
-          <p className="mt-1 text-3xl font-bold text-neutral-800">{staff.length}</p>
-          <p className="mt-1 text-xs text-neutral-500">เจ้าหน้าที่หลังบ้านตามสิทธิ์ที่ได้รับ</p>
+        <div className="rounded-2xl border border-white/10 bg-[#15151b] p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">พนักงาน / Admin</p>
+          <p className="mt-1 text-3xl font-bold text-white">{staff.length}</p>
+          <p className="mt-1 text-xs text-zinc-500">เจ้าหน้าที่หลังบ้านตามสิทธิ์ที่ได้รับ</p>
         </div>
         <div className="rounded-2xl border border-brand/30 bg-brand/5 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-brand-dark">สมาชิกลูกค้า</p>
-          <p className="mt-1 text-3xl font-bold text-brand-dark">{customers.length}</p>
-          <p className="mt-1 text-xs text-brand-dark">ลูกค้าที่สมัครสมาชิกผ่านหน้าเว็บไซต์</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400">สมาชิกลูกค้า</p>
+          <p className="mt-1 text-3xl font-bold text-emerald-400">{customers.length}</p>
+          <p className="mt-1 text-xs text-emerald-400">ลูกค้าที่สมัครสมาชิกผ่านหน้าเว็บไซต์</p>
         </div>
       </div>
 
@@ -65,17 +65,17 @@ export default async function AdminUsersPage() {
       </Section>
 
       {/* Staff / Admin */}
-      <Section title="ฝ่ายพนักงาน (Admin)" badgeClass="bg-neutral-100 text-neutral-600" count={staff.length}>
+      <Section title="ฝ่ายพนักงาน (Admin)" badgeClass="bg-white/10 text-zinc-400" count={staff.length}>
         <AdminTable users={staff} currentAdminId={admin.id} />
       </Section>
 
       {/* Customers */}
-      <Section title="ฝ่ายสมาชิกลูกค้า (หน้าเว็บไซต์)" badgeClass="bg-brand/10 text-brand-dark" count={customers.length}>
+      <Section title="ฝ่ายสมาชิกลูกค้า (หน้าเว็บไซต์)" badgeClass="bg-brand/10 text-emerald-400" count={customers.length}>
         {customers.length === 0 ? (
-          <p className="px-4 py-6 text-center text-sm text-neutral-400">ยังไม่มีลูกค้าสมัครสมาชิก</p>
+          <p className="px-4 py-6 text-center text-sm text-zinc-600">ยังไม่มีลูกค้าสมัครสมาชิก</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+            <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
               <tr>
                 <th className="px-4 py-3">ชื่อ</th>
                 <th className="px-4 py-3">อีเมล</th>
@@ -84,14 +84,14 @@ export default async function AdminUsersPage() {
                 <th className="px-4 py-3 text-right">การใช้งาน</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-white/10">
               {customers.map((c) => (
                 <tr key={c.id}>
-                  <td className="px-4 py-3 font-medium text-neutral-800">{c.name}</td>
-                  <td className="px-4 py-3 text-neutral-500">{c.email}</td>
-                  <td className="px-4 py-3 text-neutral-500">{c.phone || "-"}</td>
-                  <td className="px-4 py-3 text-neutral-500">{formatDate(c.createdAt)}</td>
-                  <td className="px-4 py-3 text-right text-xs text-neutral-500">
+                  <td className="px-4 py-3 font-medium text-white">{c.name}</td>
+                  <td className="px-4 py-3 text-zinc-500">{c.email}</td>
+                  <td className="px-4 py-3 text-zinc-500">{c.phone || "-"}</td>
+                  <td className="px-4 py-3 text-zinc-500">{formatDate(c.createdAt)}</td>
+                  <td className="px-4 py-3 text-right text-xs text-zinc-500">
                     {c._count.conversations} แชท · {c._count.quoteRequests} คำขอใบเสนอราคา
                   </td>
                 </tr>
@@ -118,10 +118,10 @@ function Section({
   return (
     <div className="mb-8">
       <div className="mb-3 flex items-center gap-2">
-        <h2 className="text-sm font-bold text-neutral-900">{title}</h2>
+        <h2 className="text-sm font-bold text-white">{title}</h2>
         <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${badgeClass}`}>{count} คน</span>
       </div>
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">{children}</div>
+      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#15151b]">{children}</div>
     </div>
   );
 }
@@ -134,11 +134,11 @@ function AdminTable({
   currentAdminId: string;
 }) {
   if (users.length === 0) {
-    return <p className="px-4 py-6 text-center text-sm text-neutral-400">ไม่มีผู้ใช้ในกลุ่มนี้</p>;
+    return <p className="px-4 py-6 text-center text-sm text-zinc-600">ไม่มีผู้ใช้ในกลุ่มนี้</p>;
   }
   return (
     <table className="w-full text-sm">
-      <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+      <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
         <tr>
           <th className="px-4 py-3">ชื่อ</th>
           <th className="px-4 py-3">อีเมล</th>
@@ -147,27 +147,27 @@ function AdminTable({
           <th className="px-4 py-3 text-right">จัดการ</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-neutral-100">
+      <tbody className="divide-y divide-white/10">
         {users.map((u) => {
           const isMe = u.id === currentAdminId;
           return (
             <tr key={u.id}>
-              <td className="px-4 py-3 font-medium text-neutral-800">
+              <td className="px-4 py-3 font-medium text-white">
                 {u.name}
-                {isMe && <span className="ml-1 text-xs text-neutral-400">(คุณ)</span>}
+                {isMe && <span className="ml-1 text-xs text-zinc-600">(คุณ)</span>}
               </td>
-              <td className="px-4 py-3 text-neutral-500">{u.email}</td>
-              <td className="px-4 py-3 text-neutral-500">{u.phone || "-"}</td>
+              <td className="px-4 py-3 text-zinc-500">{u.email}</td>
+              <td className="px-4 py-3 text-zinc-500">{u.phone || "-"}</td>
               <td className="px-4 py-3">
                 {u.active ? (
-                  <span className="text-brand-dark">● ใช้งานอยู่</span>
+                  <span className="text-emerald-400">● ใช้งานอยู่</span>
                 ) : (
-                  <span className="text-neutral-400">○ ปิดใช้งาน</span>
+                  <span className="text-zinc-600">○ ปิดใช้งาน</span>
                 )}
               </td>
               <td className="px-4 py-3 text-right">
                 <div className="flex justify-end gap-3">
-                  <Link href={`/admin/users/${u.id}/edit`} className="text-brand-dark hover:underline">
+                  <Link href={`/admin/users/${u.id}/edit`} className="text-emerald-400 hover:underline">
                     แก้ไข
                   </Link>
                   {!isMe && (

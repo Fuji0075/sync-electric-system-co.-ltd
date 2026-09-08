@@ -19,7 +19,7 @@ export default async function EditProductPage({ params }: { params: Params }) {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">แก้ไขสินค้า</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">แก้ไขสินค้า</h1>
       <ProductForm action={action} categories={categories} defaultValues={product} />
     </div>
   );

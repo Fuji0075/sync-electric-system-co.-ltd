@@ -5,12 +5,12 @@ import { getCurrentAdminAccess, isSuperAdmin } from "@/lib/admin-permissions";
 import { ACTIVITY_LABELS } from "@/lib/activity-log";
 
 const ACTION_BADGE: Record<string, string> = {
-  login: "bg-neutral-100 text-neutral-600",
+  login: "bg-white/10 text-zinc-400",
   reply_chat: "bg-sky-100 text-sky-700",
-  close_chat: "bg-neutral-100 text-neutral-600",
-  create_quote: "bg-brand/10 text-brand-dark",
+  close_chat: "bg-white/10 text-zinc-400",
+  create_quote: "bg-brand/10 text-emerald-400",
   claim_quote: "bg-amber-100 text-amber-700",
-  edit_quote: "bg-neutral-100 text-neutral-600",
+  edit_quote: "bg-white/10 text-zinc-400",
   send_quote: "bg-emerald-100 text-emerald-700",
   approve_quote: "bg-purple-100 text-purple-700",
 };
@@ -45,19 +45,19 @@ export default async function ActivityLogsPage({ searchParams }: { searchParams:
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-neutral-900">ประวัติการทำงานของผู้ใช้ Admin</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-xl font-bold text-white">ประวัติการทำงานของผู้ใช้ Admin</h1>
+        <p className="text-sm text-zinc-500">
           ดูว่าแอดมินคนไหนตอบแชท สร้าง/ส่งใบเสนอราคา หรือทำรายการใดในระบบบ้าง (แสดงล่าสุด 200 รายการ)
         </p>
       </div>
 
-      <form className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-neutral-200 bg-white p-4">
+      <form className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-[#15151b] p-4">
         <div>
-          <label className="mb-1 block text-xs font-medium text-neutral-500">ผู้ใช้</label>
+          <label className="mb-1 block text-xs font-medium text-zinc-500">ผู้ใช้</label>
           <select
             name="admin"
             defaultValue={adminFilter ?? ""}
-            className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm outline-none focus:border-brand"
+            className="rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
           >
             <option value="">ทั้งหมด</option>
             {adminUsers.map((u) => (
@@ -68,11 +68,11 @@ export default async function ActivityLogsPage({ searchParams }: { searchParams:
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-neutral-500">ประเภทการกระทำ</label>
+          <label className="mb-1 block text-xs font-medium text-zinc-500">ประเภทการกระทำ</label>
           <select
             name="action"
             defaultValue={actionFilter ?? ""}
-            className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm outline-none focus:border-brand"
+            className="rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
           >
             <option value="">ทั้งหมด</option>
             {Object.entries(ACTIVITY_LABELS).map(([key, label]) => (
@@ -89,15 +89,15 @@ export default async function ActivityLogsPage({ searchParams }: { searchParams:
           กรอง
         </button>
         {(adminFilter || actionFilter) && (
-          <Link href="/admin/logs" className="mt-4 text-sm text-neutral-500 hover:underline">
+          <Link href="/admin/logs" className="mt-4 text-sm text-zinc-500 hover:underline">
             ล้างตัวกรอง
           </Link>
         )}
       </form>
 
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#15151b]">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+          <thead className="bg-white/5 text-left text-xs uppercase text-zinc-500">
             <tr>
               <th className="px-4 py-3">เวลา</th>
               <th className="px-4 py-3">ผู้ใช้</th>
@@ -105,28 +105,28 @@ export default async function ActivityLogsPage({ searchParams }: { searchParams:
               <th className="px-4 py-3">รายละเอียด</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
+          <tbody className="divide-y divide-white/10">
             {logs.map((log) => (
               <tr key={log.id}>
-                <td className="whitespace-nowrap px-4 py-3 text-neutral-500">
+                <td className="whitespace-nowrap px-4 py-3 text-zinc-500">
                   {formatDateTime(log.createdAt)}
                 </td>
-                <td className="px-4 py-3 font-medium text-neutral-800">{log.adminName}</td>
+                <td className="px-4 py-3 font-medium text-white">{log.adminName}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                      ACTION_BADGE[log.action] ?? "bg-neutral-100 text-neutral-600"
+                      ACTION_BADGE[log.action] ?? "bg-white/10 text-zinc-400"
                     }`}
                   >
                     {ACTIVITY_LABELS[log.action] ?? log.action}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-neutral-600">{log.description}</td>
+                <td className="px-4 py-3 text-zinc-400">{log.description}</td>
               </tr>
             ))}
             {logs.length === 0 && (
               <tr>
-                <td colSpan={4} className="p-8 text-center text-sm text-neutral-400">
+                <td colSpan={4} className="p-8 text-center text-sm text-zinc-600">
                   ยังไม่มีประวัติการทำงาน
                 </td>
               </tr>

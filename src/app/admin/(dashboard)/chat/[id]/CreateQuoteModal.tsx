@@ -51,17 +51,17 @@ export default function CreateQuoteModal({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+            className="flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-[#15151b] shadow-2xl"
           >
-            <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-2">
-              <span className="text-sm font-semibold text-neutral-700">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
+              <span className="text-sm font-semibold text-zinc-300">
                 ใบเสนอราคาที่สร้างจากแชทนี้
               </span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="ปิด"
-                className="rounded-full p-1.5 text-neutral-500 hover:bg-neutral-100"
+                className="rounded-full p-1.5 text-zinc-500 hover:bg-white/10"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
                   <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />

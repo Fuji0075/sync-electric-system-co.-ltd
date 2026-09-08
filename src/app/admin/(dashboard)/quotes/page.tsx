@@ -15,30 +15,30 @@ export default async function AdminQuotesPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">คำขอใบเสนอราคา</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">คำขอใบเสนอราคา</h1>
 
       <div className="space-y-4">
         {quotes.map((q) => (
-          <div key={q.id} className="rounded-2xl border border-neutral-200 bg-white p-5">
+          <div key={q.id} className="rounded-2xl border border-white/10 bg-[#15151b] p-5">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <p className="font-semibold text-neutral-900">{q.productName ?? "สอบถามทั่วไป"}</p>
-                <p className="text-sm text-neutral-600">
+                <p className="font-semibold text-white">{q.productName ?? "สอบถามทั่วไป"}</p>
+                <p className="text-sm text-zinc-400">
                   {q.name} · {q.email} {q.phone && `· ${q.phone}`}
                 </p>
-                {q.company && <p className="text-sm text-neutral-500">บริษัท: {q.company}</p>}
-                {q.quantity && <p className="text-sm text-neutral-500">จำนวน: {q.quantity}</p>}
+                {q.company && <p className="text-sm text-zinc-500">บริษัท: {q.company}</p>}
+                {q.quantity && <p className="text-sm text-zinc-500">จำนวน: {q.quantity}</p>}
                 {q.message && (
-                  <p className="mt-2 whitespace-pre-line text-sm text-neutral-700">{q.message}</p>
+                  <p className="mt-2 whitespace-pre-line text-sm text-zinc-300">{q.message}</p>
                 )}
               </div>
               <div className="text-right">
-                <time className="block text-xs text-neutral-400">
+                <time className="block text-xs text-zinc-600">
                   {new Date(q.createdAt).toLocaleString("th-TH")}
                 </time>
                 <span
                   className={`mt-1 inline-block text-xs font-semibold ${
-                    q.emailSent ? "text-brand-dark" : "text-amber-600"
+                    q.emailSent ? "text-emerald-400" : "text-amber-600"
                   }`}
                 >
                   {q.emailSent ? "ส่งอีเมลแจ้งเซลส์แล้ว" : "ยังไม่ได้ส่งอีเมล (ตั้งค่า SMTP)"}
@@ -74,7 +74,7 @@ export default async function AdminQuotesPage() {
                     className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
                       q.status === value
                         ? "bg-brand text-white"
-                        : "border border-neutral-300 text-neutral-600 hover:border-brand hover:text-brand-dark"
+                        : "border border-white/15 text-zinc-400 hover:border-brand hover:text-emerald-400"
                     }`}
                   >
                     {label}
@@ -96,7 +96,7 @@ export default async function AdminQuotesPage() {
           </div>
         ))}
         {quotes.length === 0 && (
-          <p className="rounded-xl border border-dashed border-neutral-300 p-10 text-center text-sm text-neutral-500">
+          <p className="rounded-xl border border-dashed border-white/15 p-10 text-center text-sm text-zinc-500">
             ยังไม่มีคำขอใบเสนอราคา
           </p>
         )}

@@ -9,46 +9,46 @@ export default async function AdminCatalogPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold text-neutral-900">แค็ตตาล็อก</h1>
+      <h1 className="mb-6 text-xl font-bold text-white">แค็ตตาล็อก</h1>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <form
           action={createCatalogFile}
-          className="h-fit space-y-4 rounded-2xl border border-neutral-200 bg-white p-6"
+          className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#15151b] p-6"
         >
-          <h2 className="font-semibold text-neutral-900">เพิ่มไฟล์แค็ตตาล็อก</h2>
+          <h2 className="font-semibold text-white">เพิ่มไฟล์แค็ตตาล็อก</h2>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ชื่อไฟล์ *</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ชื่อไฟล์ *</label>
             <input
               name="title"
               required
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ลิงก์ไฟล์ (URL) *</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ลิงก์ไฟล์ (URL) *</label>
             <input
               name="fileUrl"
               required
               placeholder="/catalogs/motor-catalog.pdf"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ลิงก์รูปหน้าปก (URL)</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ลิงก์รูปหน้าปก (URL)</label>
             <input
               name="coverImage"
               placeholder="/catalogs/covers/motor-catalog.jpg"
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">ลำดับ</label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">ลำดับ</label>
             <input
               name="order"
               type="number"
               defaultValue={0}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-brand"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand"
             />
           </div>
           <button
@@ -59,24 +59,24 @@ export default async function AdminCatalogPage() {
           </button>
         </form>
 
-        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-          <ul className="divide-y divide-neutral-100">
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#15151b]">
+          <ul className="divide-y divide-white/10">
             {files.map((f) => (
               <li key={f.id} className="flex items-center justify-between gap-4 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-14 w-10 shrink-0 overflow-hidden rounded bg-neutral-100">
+                  <div className="h-14 w-10 shrink-0 overflow-hidden rounded bg-white/10">
                     {f.coverImage && (
                       // eslint-disable-next-line @next/next/no-img-element -- admin-only thumbnail preview
                       <img src={f.coverImage} alt="" className="h-full w-full object-cover" />
                     )}
                   </div>
                   <div>
-                    <div className="font-medium text-neutral-800">{f.title}</div>
+                    <div className="font-medium text-white">{f.title}</div>
                     <a
                       href={f.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-brand-dark hover:underline"
+                      className="text-xs text-emerald-400 hover:underline"
                     >
                       {f.fileUrl}
                     </a>
@@ -98,7 +98,7 @@ export default async function AdminCatalogPage() {
               </li>
             ))}
             {files.length === 0 && (
-              <li className="p-8 text-center text-sm text-neutral-400">ยังไม่มีไฟล์</li>
+              <li className="p-8 text-center text-sm text-zinc-600">ยังไม่มีไฟล์</li>
             )}
           </ul>
         </div>

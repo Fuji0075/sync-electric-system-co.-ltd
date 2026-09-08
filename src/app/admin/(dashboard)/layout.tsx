@@ -34,7 +34,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     : [];
 
   return (
-    <div className="flex min-h-screen bg-neutral-50">
+    <div className="flex min-h-screen bg-[#0a0a0d]">
       <AdminSidebar
         nav={visibleNav}
         extraNav={extraNav}
