@@ -43,23 +43,23 @@ export default async function DashboardLayout({ children }: { children: React.Re
       />
 
       <div className="flex-1">
-        <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
-          <span className="text-sm text-neutral-500">
-            เข้าสู่ระบบในชื่อ <strong className="text-neutral-800">{admin.name}</strong>
+        <header className="flex items-center justify-between bg-[#0f0f14] px-6 py-3.5">
+          <span className="text-sm text-zinc-400">
+            เข้าสู่ระบบในชื่อ <strong className="text-white">{admin.name}</strong>
             {isSuperAdmin(admin) && (
-              <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+              <span className="ml-2 rounded-full bg-orange-400/15 px-2 py-0.5 text-[10px] font-bold text-orange-400">
                 SUPER ADMIN
               </span>
             )}
           </span>
           <div className="flex items-center gap-3">
-            <Link href="/" target="_blank" className="text-xs text-neutral-500 hover:text-brand-dark">
+            <Link href="/" target="_blank" className="text-xs text-zinc-400 hover:text-orange-400">
               ดูหน้าเว็บไซต์ ↗
             </Link>
             <form action={logout}>
               <button
                 type="submit"
-                className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:border-red-300 hover:text-red-600"
+                className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:border-red-400/40 hover:text-red-400"
               >
                 ออกจากระบบ
               </button>
