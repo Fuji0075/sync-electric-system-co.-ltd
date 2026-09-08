@@ -4,6 +4,7 @@ import { sendAdminReply, closeConversation } from "../actions";
 import { createQuoteFromConversation } from "../../quotations/actions";
 import { parseChatMessage } from "@/lib/chat-message";
 import ChatAvatar from "../ChatAvatar";
+import CreateQuoteModal from "./CreateQuoteModal";
 
 const SENDER_LABEL: Record<string, string> = {
   visitor: "ลูกค้า",
@@ -49,20 +50,8 @@ export default async function AdminChatThreadPage({ params }: { params: Params }
             </p>
           </div>
         </div>
-        <div className="flex shrink-0 gap-2">
-          <form
-            action={async () => {
-              "use server";
-              await createQuoteFromConversation(conversation.id);
-            }}
-          >
-            <button
-              type="submit"
-              className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
-            >
-              🧾 สร้างใบเสนอราคา
-            </button>
-          </form>
+        <div className="flex shrink-0 items-center gap-2">
+          <CreateQuoteModal action={createQuoteFromConversation.bind(null, conversation.id)} />
           {conversation.status !== "closed" && (
             <form
               action={async () => {

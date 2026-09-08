@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { generateQuoteNumber } from "@/lib/quote-number";
-import { findMatchedProductsForQuote } from "@/lib/chat-ai";
 import { sendMail } from "@/lib/mail";
 import { getSiteSettings } from "@/lib/settings";
 import { getSession } from "@/lib/auth";
@@ -16,23 +15,21 @@ async function getCurrentAdmin() {
   return prisma.adminUser.findUnique({ where: { id: session.sub } });
 }
 
-export async function createQuoteFromConversation(conversationId: string) {
+export async function createQuoteFromConversation(conversationId: string): Promise<{ quoteId: string }> {
   const conversation = await prisma.conversation.findUnique({
     where: { id: conversationId },
-    include: { messages: true, customer: true },
+    include: { customer: true },
   });
-  if (!conversation) return;
+  if (!conversation) throw new Error("ไม่พบการสนทนานี้");
 
-  const visitorMessages = conversation.messages
-    .filter((m) => m.sender === "visitor")
-    .map((m) => m.body);
-
-  const matchedProducts = await findMatchedProductsForQuote(visitorMessages);
   const quoteNumber = await generateQuoteNumber();
   // Remembers which admin picked up this chat, so their name/phone/signature
   // are attached to the quote automatically.
   const admin = await getCurrentAdmin();
 
+  // Starts with an empty item list — the sales rep reads the chat and adds
+  // the products discussed themselves, rather than the AI guessing and
+  // pre-filling items that may not match what was actually agreed on.
   const quote = await prisma.quoteDocument.create({
     data: {
       quoteNumber,
@@ -43,15 +40,6 @@ export async function createQuoteFromConversation(conversationId: string) {
       companyName: conversation.customer?.name ?? conversation.visitorName ?? null,
       email: conversation.customer?.email ?? conversation.visitorEmail ?? null,
       tel: conversation.customer?.phone ?? conversation.visitorPhone ?? null,
-      items: {
-        create: matchedProducts.map((p, i) => ({
-          order: i,
-          description: `${p.name}\n${p.summary}`,
-          quantity: 1,
-          unit: "UNIT",
-          unitPrice: p.price ?? 0,
-        })),
-      },
     },
   });
 
@@ -63,7 +51,7 @@ export async function createQuoteFromConversation(conversationId: string) {
   });
 
   revalidatePath("/admin/quotations");
-  redirect(`/admin/quotations/${quote.id}/edit`);
+  return { quoteId: quote.id };
 }
 
 export async function createQuoteFromQuoteRequest(quoteRequestId: string) {

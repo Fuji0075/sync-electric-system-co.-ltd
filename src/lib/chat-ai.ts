@@ -144,38 +144,3 @@ export async function generateAiReply(message: string): Promise<string | null> {
 
   return [intro, "", lines.join("\n\n"), "", suffix].join("\n") + buttons;
 }
-
-/**
- * Scans every visitor message in a conversation and returns the products
- * that were most likely being asked about, for pre-filling a draft
- * quotation. Used by the "สร้างใบเสนอราคาจากแชทนี้" admin action.
- */
-export async function findMatchedProductsForQuote(
-  visitorMessages: string[],
-  limit = 3
-): Promise<ProductRow[]> {
-  const combinedQuery = normalize(visitorMessages.join(" "));
-  if (!combinedQuery) return [];
-
-  const products = await prisma.product.findMany({
-    include: { category: true },
-    take: 200,
-  });
-
-  const scored = products
-    .map((p) => ({ product: p, score: scoreProduct(p, combinedQuery) }))
-    .filter((r) => r.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  if (scored.length === 0) return [];
-
-  // Only keep products that scored close to the best match, so a specific
-  // product name doesn't drag in every loosely-related item from the same
-  // category (e.g. asking about one gear motor shouldn't draft a line item
-  // for every other gear motor too).
-  const topScore = scored[0].score;
-  return scored
-    .filter((r) => r.score >= topScore * 0.6)
-    .slice(0, limit)
-    .map((r) => r.product);
-}
